@@ -3,7 +3,7 @@ export const mockData = [
     id: "2",
     name: "Jimmy Donaldson",
     username: "mrbeast",
-    profileImage: "./public/mrbeast.jpeg",
+    profileImage: "/mrbeast.jpeg",
     bio: "Philanthropist and YouTuber known for insane challenges, giveaways, and raising millions for charity.",
     followers: 200000000,
     platforms: [

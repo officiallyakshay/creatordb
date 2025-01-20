@@ -26,14 +26,16 @@ export const SocialMediaIcons = ({ platforms }: SocialMediaIconsProps) => {
         <Link
           key={platform.name}
           href={platform.url}
+          isExternal
           aria-label={platform.name}
-          target="_blank"
-          border="1px solid black"
-          borderRadius="sm"
         >
-          <IconButton aria-label={`Visit ${platform.name}`} size="xl">
-            {iconMap[platform.name] || null}
-          </IconButton>
+          <IconButton
+            icon={iconMap[platform.name] || null}
+            aria-label={`Visit ${platform.name}`}
+            size="lg"
+            variant="outline"
+            colorScheme="black"
+          />
         </Link>
       ))}
     </Flex>

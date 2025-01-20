@@ -9,22 +9,13 @@ export const TopCreators = () => {
   const navigate = useNavigate();
 
   return (
-    <Flex
-      padding="4"
-      flexDir="column"
-      gap="6"
-      width="100%"
-      align="center"
-      bgColor="white"
-    >
+    <Flex padding="4" flexDir="column" gap="6" width="100%" align="center">
       <Flex width="80%" flexDir="column">
-        <Text fontWeight="bold" color="black">
-          CreatorDB Charts
-        </Text>
-        <Text color="black">Top Creators</Text>
+        <Text fontWeight="bold">CreatorDB Charts</Text>
+        <Text>Top Creators</Text>
         <Text color="gray.500">As determined by CreatorDB Users</Text>
       </Flex>
-      {/* <Flex flexDir="row" color="black">
+      {/* <Flex flexDir="row" >
         Sort By:
       </Flex> */}
       {creators.map((creator: any, i: number) => (
@@ -54,20 +45,14 @@ export const TopCreators = () => {
             align={window.innerWidth < 602 ? "center" : "left"}
           >
             <Flex flexDir="row" gap="1">
-              <Text fontWeight="bold" color="black">
-                {creator.name}
-              </Text>
-              <Text color="black">({creator.username})</Text>
+              <Text fontWeight="bold">{creator.name}</Text>
+              <Text>({creator.username})</Text>
             </Flex>
-            <Text fontSize="sm" color="black">
-              {creator.bio}
-            </Text>
-            <Text fontSize="sm" color="black">
+            <Text fontSize="sm">{creator.bio}</Text>
+            <Text fontSize="sm">
               Followers: {formatNumber(creator.followers)}
             </Text>
-            <Text fontSize="sm" color="black">
-              Ratings: {creator.ratings}
-            </Text>
+            <Text fontSize="sm">Ratings: {creator.ratings}</Text>
           </Flex>
         </Flex>
       ))}

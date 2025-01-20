@@ -1,15 +1,22 @@
-import { Button, Flex, Heading, Image, Link, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Link,
+  Text,
+} from "@chakra-ui/react";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { mockData } from "./mockData";
 import { formatNumber } from "./utils/formatNumber";
 import { SocialMediaIcons } from "./utils/socialMediaIcons";
 import { VerticalLineWithText } from "./utils/indentedTitle";
 import { LuExternalLink } from "react-icons/lu";
 
-export const SpecificCreator = () => {
+export const Biography = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   // const [creator, setCreator] = useState(mockData);
 
   return (
@@ -22,6 +29,7 @@ export const SpecificCreator = () => {
             gap="5"
             key={i}
           >
+            <Heading size="3xl">Biography</Heading>
             <Heading size="3xl" fontWeight="bold">
               {creator.name}
             </Heading>
@@ -57,17 +65,16 @@ export const SpecificCreator = () => {
                   {/* <FaStar size="30" color="yellow" fill="yellow" /> */}
                   {/* <StarRating rating={7.6} reviewCount={89000} /> */}
                 </Flex>
-                <Button
+                {/* <Button
                   bg="black"
                   color="white"
                   _hover={{
                     bg: "gray.800",
                   }}
                   marginTop="auto"
-                  onClick={() => navigate(`/creator/${id}/biography`)}
                 >
-                  <Text color="white">Read More</Text>
-                </Button>
+                  Read More
+                </Button> */}
               </Flex>
             </Flex>
             <Flex gap="5" flexDir="column">

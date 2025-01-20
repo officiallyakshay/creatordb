@@ -1,58 +1,83 @@
-import { Flex, Input, Button, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Input,
+  Button,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { RxHamburgerMenu, RxMagnifyingGlass } from "react-icons/rx";
 
 export const Nav = () => {
   const navigate = useNavigate();
-  return window.innerWidth > 602 ? (
-    <Flex p="4" width="100%" justify="center">
-      <Flex gap="4" width="80%">
-        <Button
-          variant="outline"
-          border="1px solid white"
-          onClick={() => navigate("/")}
-        >
-          <Text color="white"> CreatorDB</Text>
-        </Button>
-        <Input
-          placeholder="Search CreatorDB"
-          border="1px solid white"
-          color="white"
-        />
-        {/* should navigate to stripe page maybe */}
-        <Button
-          variant="outline"
-          border="1px solid white"
-          onClick={() => navigate("/subscribe")}
-        >
-          <Text color="white"> CreatorDB Pro</Text>
-        </Button>
-        <Button
-          variant="outline"
-          border="1px solid white"
-          onClick={() => navigate("/sign-in")}
-        >
-          <Text color="white"> Sign In</Text>
-        </Button>
-      </Flex>
-    </Flex>
-  ) : (
-    <Flex p="4" gap="4" width="100%">
-      <Button
-        variant="outline"
-        border="1px solid white"
-        onClick={() => navigate("/")}
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  return (
+    <Flex p="4" width="100%" justify="center" bgColor="black" align="center">
+      <Flex
+        gap="4"
+        width={isMobile ? "100%" : "80%"}
+        align="center"
+        justify="space-between"
       >
-        CreatorDB
-      </Button>
-      <Flex marginLeft="auto" gap="4">
-        <RxMagnifyingGlass size={40} />
-        <RxHamburgerMenu size={40} />
+        {/* Left Side - Logo and Navbar Links */}
+        <Button
+          variant="outline"
+          borderColor="white"
+          _hover={{ borderColor: "white", bg: "transparent" }}
+          onClick={() => navigate("/")}
+          padding="4"
+          minWidth="auto"
+        >
+          <Text color="white">CreatorDB</Text>
+        </Button>
+
+        {/* Search Input */}
+        {!isMobile && (
+          <Input
+            placeholder="Search CreatorDB"
+            color="white"
+            borderColor="white"
+            _focus={{ boxShadow: "none", borderColor: "white" }}
+            _hover={{ borderColor: "white" }}
+            minWidth="auto"
+          />
+        )}
+
+        {/* Buttons */}
+        {!isMobile && (
+          <>
+            <Button
+              variant="outline"
+              borderColor="white"
+              _hover={{ borderColor: "white", bg: "transparent" }}
+              onClick={() => navigate("/submit-a-creator")}
+              padding="4"
+              minWidth="auto"
+            >
+              <Text color="white">Submit A Creator</Text>
+            </Button>
+            <Button
+              variant="outline"
+              borderColor="white"
+              _hover={{ borderColor: "white", bg: "transparent" }}
+              onClick={() => navigate("/sign-in")}
+              padding="4"
+              minWidth="auto"
+            >
+              <Text color="white">Sign In</Text>
+            </Button>
+          </>
+        )}
+
+        {/* Right Side - Mobile Icons */}
+        {isMobile && (
+          <Flex marginLeft="auto" gap="4">
+            <RxMagnifyingGlass size={30} color="white" />
+            <RxHamburgerMenu size={30} color="white" />
+          </Flex>
+        )}
       </Flex>
-      {/* <Input placeholder="Search CreatorDB" border="1px solid white" /> */}
-      {/* should navigate to stripe page maybe */}
-      {/* <Button onClick={() => navigate("/subscribe")}>CreatorDB Pro</Button>
-        <Button onClick={() => navigate("/sign-in")}>Sign In</Button> */}
     </Flex>
   );
 };

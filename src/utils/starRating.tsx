@@ -33,7 +33,7 @@ export const StarRating = ({ rating, reviewCount }: ColdStarRatingProps) => {
       </Box>
 
       {/* Display the rating and review count */}
-      <Text fontSize="md" color="black">
+      <Text fontSize="md">
         {rating.toFixed(1)} ({formattedReviews})
       </Text>
     </Flex>
