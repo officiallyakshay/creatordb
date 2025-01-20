@@ -7,6 +7,7 @@ function App() {
   return (
     <>
       <Nav />
+      <hr style={{ border: "1px solid white", marginTop: "10px" }} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
