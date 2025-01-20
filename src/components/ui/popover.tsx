@@ -39,7 +39,6 @@ export const PopoverCloseTrigger = React.forwardRef<
 >(function PopoverCloseTrigger(props, ref) {
   return (
     // @ts-ignore
-
     <ChakraPopover.CloseTrigger
       position="absolute"
       top="1"

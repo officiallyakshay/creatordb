@@ -1,0 +1,117 @@
+export const mockData = [
+  {
+    id: "1",
+    name: "Sophia Turner",
+    username: "sophiaturns",
+    profileImage: "https://randomuser.me/api/portraits/women/1.jpg",
+    bio: "Fashion influencer sharing the latest trends and styling tips.",
+    followers: 120000,
+    platforms: [
+      {
+        name: "Instagram",
+        handle: "@sophiaturns",
+        url: "https://instagram.com/sophiaturns",
+      },
+      {
+        name: "TikTok",
+        handle: "@sophiaturns",
+        url: "https://tiktok.com/@sophiaturns",
+      },
+    ],
+    genres: ["Fashion", "Lifestyle"],
+    collaborations: ["H&M", "Zara", "Sephora"],
+    ratings: 4.8,
+  },
+  {
+    id: "2",
+    name: "James Rodriguez",
+    username: "jamesthelens",
+    profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+    bio: "Fitness coach inspiring people to achieve their health goals.",
+    followers: 85000,
+    platforms: [
+      {
+        name: "YouTube",
+        handle: "James Rodriguez",
+        url: "https://youtube.com/c/jamesrodriguez",
+      },
+      {
+        name: "Instagram",
+        handle: "@jamesthelens",
+        url: "https://instagram.com/jamesthelens",
+      },
+    ],
+    genres: ["Fitness", "Health"],
+    collaborations: ["Nike", "MyProtein", "Under Armour"],
+    ratings: 4.7,
+  },
+  {
+    id: "3",
+    name: "Emily Zhang",
+    username: "emilyzkitchen",
+    profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
+    bio: "Sharing quick, healthy recipes for busy foodies.",
+    followers: 65000,
+    platforms: [
+      {
+        name: "Instagram",
+        handle: "@emilyzkitchen",
+        url: "https://instagram.com/emilyzkitchen",
+      },
+      {
+        name: "Pinterest",
+        handle: "@emilyzkitchen",
+        url: "https://pinterest.com/emilyzkitchen",
+      },
+    ],
+    genres: ["Food", "Cooking"],
+    collaborations: ["Whole Foods", "Blue Apron", "Tupperware"],
+    ratings: 4.9,
+  },
+  {
+    id: "4",
+    name: "Alex Nguyen",
+    username: "alexnguyenshots",
+    profileImage: "https://randomuser.me/api/portraits/men/2.jpg",
+    bio: "Travel photographer capturing moments from around the world.",
+    followers: 180000,
+    platforms: [
+      {
+        name: "Instagram",
+        handle: "@alexnguyenshots",
+        url: "https://instagram.com/alexnguyenshots",
+      },
+      {
+        name: "Behance",
+        handle: "Alex Nguyen",
+        url: "https://behance.net/alexnguyen",
+      },
+    ],
+    genres: ["Photography", "Travel"],
+    collaborations: ["Canon", "National Geographic", "Airbnb"],
+    ratings: 4.6,
+  },
+  {
+    id: "5",
+    name: "Rachel Kim",
+    username: "rachelreacts",
+    profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
+    bio: "Tech enthusiast reviewing the latest gadgets and apps.",
+    followers: 95000,
+    platforms: [
+      {
+        name: "YouTube",
+        handle: "Rachel Kim",
+        url: "https://youtube.com/c/rachelkim",
+      },
+      {
+        name: "Twitter",
+        handle: "@rachelreacts",
+        url: "https://twitter.com/rachelreacts",
+      },
+    ],
+    genres: ["Tech", "Reviews"],
+    collaborations: ["Samsung", "Google", "Best Buy"],
+    ratings: 4.7,
+  },
+];

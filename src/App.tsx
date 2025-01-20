@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { Advertisement } from "./Advertisement";
 import { Home } from "./Home";
 import { Nav } from "./Nav";
 import { SignIn } from "./SignIn";
@@ -7,7 +8,7 @@ function App() {
   return (
     <>
       <Nav />
-      <hr style={{ border: "1px solid white", marginTop: "10px" }} />
+      <Advertisement />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
