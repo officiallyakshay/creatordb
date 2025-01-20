@@ -10,7 +10,7 @@ export const Nav = () => {
         <Button
           variant="outline"
           border="1px solid white"
-          onClick={() => navigate("/top-creators")}
+          onClick={() => navigate("/")}
         >
           <Text color="white"> CreatorDB</Text>
         </Button>

@@ -12,8 +12,8 @@ function App() {
       <Nav />
       <Advertisement />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/top-creators" element={<TopCreators />} />
+        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/" element={<TopCreators />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/creator/:id" element={<SpecificCreator />} />
       </Routes>

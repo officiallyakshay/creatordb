@@ -1,10 +1,8 @@
 import { Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { mockData } from "./mockData";
 import { formatNumber } from "./utils/formatNumber";
-import { StarRating } from "./utils/starRating";
-import { FaStar } from "react-icons/fa";
 import { SocialMediaIcons } from "./utils/socialMediaIcons";
 import { VerticalLineWithText } from "./utils/indentedTitle";
 
