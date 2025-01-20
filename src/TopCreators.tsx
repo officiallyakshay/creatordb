@@ -2,8 +2,9 @@ import { Flex, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { mockData } from "./mockData";
+import { formatNumber } from "./utils/formatNumber";
 
-export const Home = () => {
+export const TopCreators = () => {
   const [creators, setCreators] = useState(mockData);
   const navigate = useNavigate();
 
@@ -37,7 +38,7 @@ export const Home = () => {
           align="center"
           gap="4"
           cursor="pointer"
-          onClick={() => navigate(`creator/${creator.username}`)}
+          onClick={() => navigate(`/creator/${creator.username}`)}
         >
           <Image
             src={creator.profileImage}
@@ -62,7 +63,7 @@ export const Home = () => {
               {creator.bio}
             </Text>
             <Text fontSize="sm" color="black">
-              Followers: {creator.followers}
+              Followers: {formatNumber(creator.followers)}
             </Text>
             <Text fontSize="sm" color="black">
               Ratings: {creator.ratings}
