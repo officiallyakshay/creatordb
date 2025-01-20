@@ -10,20 +10,24 @@ import { VerticalLineWithText } from "./utils/indentedTitle";
 
 export const SpecificCreator = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [creator, setCreator] = useState(mockData);
-  console.log("creator", creator, "id", id);
+  // const [creator, setCreator] = useState(mockData);
+
   return (
     <Flex p="4" width="100%" justify="center" bgColor="white">
-      {mockData.map((creator) =>
+      {mockData.map((creator, i) =>
         creator.username !== id ? null : (
-          <Flex flexDir="column" width={{ base: "95%", md: "80%" }} gap="5">
+          <Flex
+            flexDir="column"
+            width={{ base: "95%", md: "80%" }}
+            gap="5"
+            key={i}
+          >
             <Heading size="3xl" fontWeight="bold" color="black">
               {creator.name}
             </Heading>
             <Flex gap="1">
               {creator.genres.map((genre, i) => (
-                <>
+                <Flex key={i}>
                   <Text color="black" textStyle="xs">
                     {genre}
                   </Text>
@@ -32,7 +36,7 @@ export const SpecificCreator = () => {
                       •
                     </Text>
                   )}
-                </>
+                </Flex>
               ))}
             </Flex>
             <Flex>
@@ -65,8 +69,8 @@ export const SpecificCreator = () => {
               <Flex mt="2" flexDir="column">
                 <VerticalLineWithText title="Brands collaborated with" />
                 <Flex gap="2" mt="4" flexDir="column">
-                  {creator.collaborations.map((brand) => (
-                    <Flex gap="2" flexDir="row" align="center">
+                  {creator.collaborations.map((brand, i) => (
+                    <Flex gap="2" flexDir="row" align="center" key={i}>
                       <Text color="black">{brand}</Text>
                       <Text color="black" textStyle="sm">
                         (Not Verified)

@@ -4,6 +4,7 @@ import { TopCreators } from "./TopCreators";
 import { Nav } from "./Nav";
 import { SignIn } from "./SignIn";
 import { SpecificCreator } from "./SpecificCreator";
+import { Home } from "./Home";
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
       <Nav />
       <Advertisement />
       <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/" element={<Home />} />
         <Route path="/top-creators" element={<TopCreators />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/creator/:id" element={<SpecificCreator />} />
