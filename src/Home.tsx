@@ -14,18 +14,29 @@ export const Home = () => {
       gap="6"
       width="100%"
       align="center"
-      cursor="pointer"
+      bgColor="white"
     >
+      <Flex width="80%" flexDir="column">
+        <Text fontWeight="bold" color="black">
+          CreatorDB Charts
+        </Text>
+        <Text color="black">Top Creators</Text>
+        <Text color="gray.500">As determined by CreatorDB Users</Text>
+      </Flex>
+      {/* <Flex flexDir="row" color="black">
+        Sort By:
+      </Flex> */}
       {creators.map((creator: any, i: number) => (
         <Flex
           flexDir={{ base: "column", md: "row" }}
-          border="1px solid white"
+          border="1px solid black"
           padding="6"
           width={{ base: "95%", md: "80%" }}
           key={i}
           borderRadius="lg"
           align="center"
           gap="4"
+          cursor="pointer"
           onClick={() => navigate(`creator/${creator.username}`)}
         >
           <Image
@@ -42,14 +53,18 @@ export const Home = () => {
             align={window.innerWidth < 602 ? "center" : "left"}
           >
             <Flex flexDir="row" gap="1">
-              <Text fontWeight="bold">{creator.name}</Text>
-              <Text>({creator.username})</Text>
+              <Text fontWeight="bold" color="black">
+                {creator.name}
+              </Text>
+              <Text color="black">({creator.username})</Text>
             </Flex>
-            <Text fontSize="sm">{creator.bio}</Text>
-            <Text fontSize="sm" color="gray.400">
+            <Text fontSize="sm" color="black">
+              {creator.bio}
+            </Text>
+            <Text fontSize="sm" color="black">
               Followers: {creator.followers}
             </Text>
-            <Text fontSize="sm" color="gray.400">
+            <Text fontSize="sm" color="black">
               Ratings: {creator.ratings}
             </Text>
           </Flex>
