@@ -48,8 +48,8 @@ export const TopCreators = () => {
           _focus={{ boxShadow: "none", borderColor: "black" }}
         >
           <option value="default">Default</option>
-          <option value="highestToLowest">Followers: Highest to Lowest</option>
           <option value="lowestToHighest">Followers: Lowest to Highest</option>
+          <option value="highestToLowest">Followers: Highest to Lowest</option>
         </Select>
       </Flex>
 
