@@ -29,17 +29,15 @@ export const Biography = () => {
             gap="5"
             key={i}
           >
-            <Heading size="3xl">Biography</Heading>
-            <Heading size="3xl" fontWeight="bold">
+            <Heading size="xl">Biography</Heading>
+            <Heading size="md" fontWeight="bold">
               {creator.name}
             </Heading>
             <Flex gap="1">
               {creator.genres.map((genre, i) => (
                 <Flex key={i} gap="1">
-                  <Text textStyle="xs">{genre}</Text>
-                  {i === creator.genres.length - 1 ? null : (
-                    <Text textStyle="xs">•</Text>
-                  )}
+                  <Text>{genre}</Text>
+                  {i === creator.genres.length - 1 ? null : <Text>•</Text>}
                 </Flex>
               ))}
             </Flex>
@@ -80,14 +78,14 @@ export const Biography = () => {
             <Flex gap="5" flexDir="column">
               <Flex mt="2" flexDir="column">
                 <VerticalLineWithText title="Brands collaborated with" />
-                {/* <Text textStyle="xl" >
+                {/* <Text >
                   Brands collaborated with:
                 </Text> */}
                 <Flex gap="2" mt="4" flexDir="column">
                   {creator.collaborations.map((brand, i) => (
                     <Flex gap="2" flexDir="row" align="center" key={i}>
                       <Text>{brand}</Text>
-                      <Text color="gray.500" textStyle="sm">
+                      <Text color="gray.500" fontSize="sm">
                         (Not Verified)
                       </Text>
                       <Link href="https://www.youtube.com/" target="_blank">
@@ -99,7 +97,7 @@ export const Biography = () => {
               </Flex>
               <Flex gap="6" mt="2" flexDir="column">
                 <VerticalLineWithText title="Social Media" />
-                {/* <Text textStyle="xl" >
+                {/* <Text >
                   Social Media
                 </Text> */}
                 <SocialMediaIcons platforms={creator.platforms} />

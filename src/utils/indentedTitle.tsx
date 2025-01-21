@@ -9,7 +9,9 @@ export const VerticalLineWithText = ({ title }: any) => {
         paddingLeft="12px" // Adjust indentation
         marginLeft="8px" // Adjust margin for the indentation
       >
-        <Text textStyle="xl">{title}</Text>
+        <Text fontSize="xl" fontWeight="bold">
+          {title}
+        </Text>
       </Box>
     </Box>
   );
