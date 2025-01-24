@@ -10,8 +10,6 @@ export const SignIn = () => {
       width="100%"
       align="center"
       justify="center"
-      // minHeight="100vh"
-      // bg="gray.900"
     >
       <Flex
         flexDir="column"

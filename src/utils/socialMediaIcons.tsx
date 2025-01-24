@@ -1,6 +1,7 @@
 import { Flex, IconButton, Link } from "@chakra-ui/react";
 import { FaYoutube, FaInstagram, FaTiktok } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
+import { SiTwitch } from "react-icons/si"; // Import the Twitch icon
 
 interface Platform {
   name: string;
@@ -17,11 +18,12 @@ export const SocialMediaIcons = ({ platforms }: SocialMediaIconsProps) => {
     YouTube: <FaYoutube color="red" />,
     Twitter: <BsTwitterX color="#000000" />,
     Instagram: <FaInstagram color="#E1306C" />,
-    TikTok: <FaTiktok color="#000000" />, // TikTok icon in black
+    TikTok: <FaTiktok color="#000000" />,
+    Twitch: <SiTwitch color="#9146FF" />,
   };
 
   return (
-    <Flex gap="4">
+    <Flex gap="4" wrap="wrap">
       {platforms.map((platform) => (
         <Link
           key={platform.name}

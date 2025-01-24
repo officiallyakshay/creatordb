@@ -1,13 +1,15 @@
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Image,
   Link,
   Text,
+  Divider,
+  Grid,
+  GridItem,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { mockData } from "./mockData";
 import { formatNumber } from "./utils/formatNumber";
@@ -17,95 +19,110 @@ import { LuExternalLink } from "react-icons/lu";
 
 export const Biography = () => {
   const { id } = useParams();
-  // const [creator, setCreator] = useState(mockData);
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  const creator = mockData.find((creator) => creator.username === id);
+
+  if (!creator) return null;
 
   return (
-    <Flex p="4" width="100%" justify="center">
-      {mockData.map((creator, i) =>
-        creator.username !== id ? null : (
+    <Flex p="6" width="100%" justify="center" bg="gray.50" minH="100vh">
+      <Box
+        bg="white"
+        p="6"
+        borderRadius="lg"
+        boxShadow="md"
+        width={{ base: "95%", md: "80%" }}
+      >
+        {/* Header Section */}
+        <Heading size="lg" fontWeight="bold" color="black" mb="4">
+          Biography
+        </Heading>
+        <Text fontSize="xs" color="gray.400" mb="4">
+          Information ethically scraped from Wikipedia.
+        </Text>
+        <Flex
+          flexDir={{ base: "column", md: "row" }}
+          align={{ base: "center", md: "flex-start" }}
+          gap="6"
+        >
+          <Image
+            src={creator.profileImage}
+            height="200px"
+            width="200px"
+            objectFit="cover"
+            borderRadius="full"
+            boxShadow="lg"
+          />
           <Flex
             flexDir="column"
-            width={{ base: "95%", md: "80%" }}
-            gap="5"
-            key={i}
+            gap="4"
+            textAlign={{ base: "center", md: "left" }}
           >
-            <Heading size="xl">Biography</Heading>
-            <Heading size="md" fontWeight="bold">
+            <Heading size="md" fontWeight="bold" color="gray.700">
               {creator.name}
             </Heading>
-            <Flex gap="1">
+            <Flex wrap="wrap" gap="2" justify={{ base: "center", md: "left" }}>
               {creator.genres.map((genre, i) => (
-                <Flex key={i} gap="1">
-                  <Text>{genre}</Text>
-                  {i === creator.genres.length - 1 ? null : <Text>•</Text>}
-                </Flex>
+                <Text key={i} fontSize="sm" color="gray.600">
+                  {genre}
+                  {i < creator.genres.length - 1 && <Text as="span"> • </Text>}
+                </Text>
               ))}
             </Flex>
-            <Flex>
-              <Image
-                src={creator.profileImage}
-                height="200px"
-                width="200px"
-                objectFit="cover"
-                marginRight="4"
-                borderRadius="lg"
-              />
-              <Flex
-                flexDir="column"
-                textAlign={{ base: "center", md: "left" }}
-                align={window.innerWidth < 602 ? "center" : "left"}
-                gap="2"
-              >
-                <Text>{creator.bio}</Text>
-                <Text>Followers: {formatNumber(creator.followers)}</Text>
-                <Flex flexDir="row" align="center" gap="2">
-                  <Text>Rating: {creator.ratings}/5</Text>
-                  {/* <FaStar size="30" color="yellow" fill="yellow" /> */}
-                  {/* <StarRating rating={7.6} reviewCount={89000} /> */}
-                </Flex>
-                {/* <Button
-                  bg="black"
-                  color="white"
-                  _hover={{
-                    bg: "gray.800",
-                  }}
-                  marginTop="auto"
-                >
-                  Read More
-                </Button> */}
-              </Flex>
-            </Flex>
-            <Flex gap="5" flexDir="column">
-              <Flex mt="2" flexDir="column">
-                <VerticalLineWithText title="Brands collaborated with" />
-                {/* <Text >
-                  Brands collaborated with:
-                </Text> */}
-                <Flex gap="2" mt="4" flexDir="column">
-                  {creator.collaborations.map((brand, i) => (
-                    <Flex gap="2" flexDir="row" align="center" key={i}>
-                      <Text>{brand}</Text>
-                      <Text color="gray.500" fontSize="sm">
-                        (Not Verified)
-                      </Text>
-                      <Link href="https://www.youtube.com/" target="_blank">
-                        <LuExternalLink />
-                      </Link>
-                    </Flex>
-                  ))}
-                </Flex>
-              </Flex>
-              <Flex gap="6" mt="2" flexDir="column">
-                <VerticalLineWithText title="Social Media" />
-                {/* <Text >
-                  Social Media
-                </Text> */}
-                <SocialMediaIcons platforms={creator.platforms} />
-              </Flex>
+            <Text color="gray.700">{creator.bio}</Text>
+            <Flex
+              gap="4"
+              fontSize="sm"
+              color="gray.700"
+              justify={{ base: "center", md: "left" }}
+            >
+              <Text>Followers: {formatNumber(creator.followers)}</Text>
+              <Text>Rating: {creator.ratings}/5</Text>
             </Flex>
           </Flex>
-        )
-      )}
+        </Flex>
+
+        {/* Divider */}
+        <Divider my="6" />
+
+        {/* Brands Collaborated Section */}
+        <Box>
+          <VerticalLineWithText title="Brands Collaborated With" />
+          <Grid
+            mt="4"
+            templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+            gap="4"
+          >
+            {creator.collaborations.map((collaboration, i) => (
+              <GridItem key={i}>
+                <Flex align="center" gap="2">
+                  <Text fontWeight="medium" color="gray.800">
+                    {collaboration.brand}
+                  </Text>
+                  {/* <Text color="gray.500" fontSize="sm">
+                    (Not Verified)
+                  </Text> */}
+                  <Link href={collaboration.url} target="_blank">
+                    <LuExternalLink />
+                  </Link>
+                </Flex>
+              </GridItem>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Divider */}
+        <Divider my="6" />
+
+        {/* Social Media Section */}
+        <Box>
+          <VerticalLineWithText title="Social Media" />
+          <Box mt="4">
+            <SocialMediaIcons platforms={creator.platforms} />
+          </Box>
+        </Box>
+      </Box>
     </Flex>
   );
 };

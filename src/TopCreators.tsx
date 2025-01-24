@@ -1,4 +1,4 @@
-import { Flex, Image, Text, Select } from "@chakra-ui/react";
+import { Flex, Image, Text, Select, Box } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { mockData } from "./mockData";
@@ -12,13 +12,17 @@ export const TopCreators = () => {
   // Sorting function based on selected option
   const sortCreators = (option: string) => {
     let sortedCreators = [...creators];
+
     if (option === "highestToLowest") {
       sortedCreators.sort((a, b) => b.followers - a.followers);
     } else if (option === "lowestToHighest") {
       sortedCreators.sort((a, b) => a.followers - b.followers);
-    } else if (option === "default") {
-      creators;
+    } else if (option === "highestRating") {
+      sortedCreators.sort((a, b) => b.ratings - a.ratings);
+    } else if (option === "lowestRating") {
+      sortedCreators.sort((a, b) => a.ratings - b.ratings);
     }
+
     setCreators(sortedCreators);
   };
 
@@ -30,68 +34,102 @@ export const TopCreators = () => {
   };
 
   return (
-    <Flex padding="4" flexDir="column" gap="6" width="100%" align="center">
-      <Flex width="80%" flexDir="row" justify="space-between" align="center">
-        {/* Left Side - Title and Description */}
-        <Flex flexDir="column">
-          <Text fontWeight="bold">CreatorDB Charts</Text>
-          <Text>Top Creators</Text>
-          <Text color="gray.500">As determined by CreatorDB Users</Text>
-        </Flex>
+    <Flex padding="6" flexDir="column" gap="8" width="100%" align="center">
+      {/* Header Section */}
+      <Flex
+        width={{ base: "90%", md: "80%" }}
+        flexDir={{ base: "column", md: "row" }}
+        justify="space-between"
+        align="center"
+        textAlign={{ base: "center", md: "left" }}
+        gap="4"
+      >
+        <Box>
+          <Text fontSize="2xl" fontWeight="bold">
+            CreatorDB Charts
+          </Text>
+          <Text fontSize="md" color="gray.600">
+            Top Creators
+          </Text>
+          <Text fontSize="sm" color="gray.500">
+            As determined by CreatorDB Users
+          </Text>
+          <Text mt="2" fontSize="sm" color="gray.500">
+            {creators.length} Creators
+          </Text>
+        </Box>
 
-        {/* Right Side - Sort By Dropdown */}
+        {/* Sort By Dropdown */}
         <Select
           value={sortOption}
           onChange={handleSortChange}
-          width="270px"
+          width={{ base: "100%", md: "270px" }}
           borderColor="black"
           _focus={{ boxShadow: "none", borderColor: "black" }}
+          bg="white"
         >
           <option value="default">Default</option>
           <option value="lowestToHighest">Followers: Lowest to Highest</option>
           <option value="highestToLowest">Followers: Highest to Lowest</option>
+          <option value="lowestRating">Ratings: Lowest to Highest</option>
+          <option value="highestRating">Ratings: Highest to Lowest</option>
         </Select>
       </Flex>
 
-      {/* Display creators */}
-      {creators.map((creator: any, i: number) => (
-        <Flex
-          flexDir={{ base: "column", md: "row" }}
-          border="1px solid black"
-          padding="6"
-          width={{ base: "95%", md: "80%" }}
-          key={i}
-          borderRadius="lg"
-          align="center"
-          gap="4"
-          cursor="pointer"
-          onClick={() => navigate(`/creator/${creator.username}`)}
-        >
-          <Image
-            src={creator.profileImage}
-            height="80px"
-            width="80px"
-            objectFit="cover"
-            marginRight="4"
-            borderRadius="lg"
-          />
+      {/* Creators List */}
+      <Flex
+        flexDir="column"
+        gap="6"
+        width={{ base: "90%", md: "80%" }}
+        align="center"
+      >
+        {creators.map((creator: any, i: number) => (
           <Flex
-            flexDir="column"
-            textAlign={{ base: "center", md: "left" }}
-            align={window.innerWidth < 602 ? "center" : "left"}
+            key={i}
+            flexDir={{ base: "column", md: "row" }}
+            border="1px solid black"
+            padding="6"
+            width="100%"
+            borderRadius="lg"
+            align="center"
+            gap="6"
+            cursor="pointer"
+            _hover={{ backgroundColor: "gray.50" }}
+            onClick={() => navigate(`/creator/${creator.username}`)}
           >
-            <Flex flexDir="row" gap="1">
-              <Text fontWeight="bold">{creator.name}</Text>
-              <Text>({creator.username})</Text>
+            {/* Profile Image */}
+            <Image
+              src={creator.profileImage}
+              height="100px"
+              width="100px"
+              objectFit="cover"
+              borderRadius="full"
+              border="1px solid black"
+            />
+            {/* Creator Details */}
+            <Flex
+              flexDir="column"
+              textAlign={{ base: "center", md: "left" }}
+              align={{ base: "center", md: "flex-start" }}
+              gap="2"
+            >
+              <Text fontSize="lg" fontWeight="bold">
+                {creator.name}{" "}
+                <Text as="span" color="gray.500">
+                  ({creator.username})
+                </Text>
+              </Text>
+              <Text fontSize="sm" color="gray.600" noOfLines={2}>
+                {creator.bio}
+              </Text>
+              <Flex gap="4" fontSize="sm" color="gray.700">
+                <Text>Followers: {formatNumber(creator.followers)}</Text>
+                <Text>Ratings: {creator.ratings}</Text>
+              </Flex>
             </Flex>
-            <Text fontSize="sm">{creator.bio}</Text>
-            <Text fontSize="sm">
-              Followers: {formatNumber(creator.followers)}
-            </Text>
-            <Text fontSize="sm">Ratings: {creator.ratings}</Text>
           </Flex>
-        </Flex>
-      ))}
+        ))}
+      </Flex>
     </Flex>
   );
 };

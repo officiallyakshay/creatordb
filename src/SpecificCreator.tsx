@@ -1,6 +1,17 @@
-import { Button, Flex, Heading, Image, Link, Text } from "@chakra-ui/react";
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Link,
+  Text,
+  Box,
+  Grid,
+  GridItem,
+  Divider,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import { useParams, useNavigate } from "react-router-dom";
 import { mockData } from "./mockData";
 import { formatNumber } from "./utils/formatNumber";
 import { SocialMediaIcons } from "./utils/socialMediaIcons";
@@ -10,93 +21,117 @@ import { LuExternalLink } from "react-icons/lu";
 export const SpecificCreator = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  // const [creator, setCreator] = useState(mockData);
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
-    <Flex p="4" width="100%" justify="center">
+    <Flex p="6" width="100%" justify="center" bg="gray.50" minH="100vh">
       {mockData.map((creator, i) =>
         creator.username !== id ? null : (
-          <Flex
-            flexDir="column"
-            width={{ base: "95%", md: "80%" }}
-            gap="5"
+          <Box
             key={i}
+            bg="white"
+            p="6"
+            borderRadius="lg"
+            boxShadow="md"
+            width={{ base: "95%", md: "80%" }}
           >
-            <Heading size="xl" fontWeight="bold">
-              {creator.name}
-            </Heading>
-            <Flex gap="1">
-              {creator.genres.map((genre, i) => (
-                <Flex key={i} gap="1">
-                  <Text>{genre}</Text>
-                  {i === creator.genres.length - 1 ? null : <Text>•</Text>}
-                </Flex>
-              ))}
-            </Flex>
-            <Flex>
+            {/* Header Section */}
+            <Flex
+              flexDir={{ base: "column", md: "row" }}
+              gap="6"
+              align={{ base: "center", md: "flex-start" }}
+            >
               <Image
                 src={creator.profileImage}
                 height="200px"
                 width="200px"
                 objectFit="cover"
-                marginRight="4"
-                borderRadius="lg"
+                borderRadius="full"
+                boxShadow="lg"
               />
               <Flex
                 flexDir="column"
+                gap="3"
                 textAlign={{ base: "center", md: "left" }}
-                align={window.innerWidth < 602 ? "center" : "left"}
-                gap="2"
               >
-                <Text>{creator.bio}</Text>
-                <Text>Followers: {formatNumber(creator.followers)}</Text>
-                <Flex flexDir="row" align="center" gap="2">
-                  <Text>Rating: {creator.ratings}/5</Text>
-                  {/* <FaStar size="30" color="yellow" fill="yellow" /> */}
-                  {/* <StarRating rating={7.6} reviewCount={89000} /> */}
+                <Heading size="lg" fontWeight="bold" color="black">
+                  {creator.name}
+                </Heading>
+                <Flex
+                  wrap="wrap"
+                  gap="2"
+                  justify={{ base: "center", md: "left" }}
+                >
+                  {creator.genres.map((genre, i) => (
+                    <Text key={i} fontSize="sm" color="gray.600">
+                      {genre}
+                      {i < creator.genres.length - 1 && (
+                        <Text as="span"> • </Text>
+                      )}
+                    </Text>
+                  ))}
                 </Flex>
+                <Text color="gray.700">{creator.bio}</Text>
+                <Text fontSize="md" fontWeight="medium">
+                  Followers: {formatNumber(creator.followers)}
+                </Text>
+                <Text fontSize="md" fontWeight="medium">
+                  Rating: {creator.ratings}/5
+                </Text>
                 <Button
                   bg="black"
                   color="white"
                   _hover={{
                     bg: "gray.800",
                   }}
-                  marginTop="auto"
                   onClick={() => navigate(`/creator/${id}/biography`)}
+                  size="sm"
+                  mt="2"
                 >
-                  <Text color="white">Read More</Text>
+                  Read More
                 </Button>
               </Flex>
             </Flex>
-            <Flex gap="5" flexDir="column">
-              <Flex mt="2" flexDir="column">
-                <VerticalLineWithText title="Brands collaborated with" />
-                {/* <Text >
-                  Brands collaborated with:
-                </Text> */}
-                <Flex gap="2" mt="4" flexDir="column">
-                  {creator.collaborations.map((brand, i) => (
-                    <Flex gap="2" flexDir="row" align="center" key={i}>
-                      <Text>{brand}</Text>
-                      <Text color="gray.500" fontSize="sm">
-                        (Not Verified)
+
+            {/* Divider */}
+            <Divider my="6" />
+
+            {/* Brands Collaborated Section */}
+            <Box>
+              <VerticalLineWithText title="Brands Collaborated With" />
+              <Grid
+                mt="4"
+                templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+                gap="4"
+              >
+                {creator.collaborations.map((collaboration, i) => (
+                  <GridItem key={i}>
+                    <Flex align="center" gap="2">
+                      <Text fontWeight="medium" color="gray.800">
+                        {collaboration.brand}
                       </Text>
-                      <Link href="https://www.youtube.com/" target="_blank">
-                        <LuExternalLink />
-                      </Link>
+                      {collaboration.url && (
+                        <Link href={collaboration.url} target="_blank">
+                          <LuExternalLink />
+                        </Link>
+                      )}
                     </Flex>
-                  ))}
-                </Flex>
-              </Flex>
-              <Flex gap="6" mt="2" flexDir="column">
-                <VerticalLineWithText title="Social Media" />
-                {/* <Text >
-                  Social Media
-                </Text> */}
+                  </GridItem>
+                ))}
+              </Grid>
+            </Box>
+
+            {/* Divider */}
+            <Divider my="6" />
+
+            {/* Social Media Section */}
+            <Box>
+              <VerticalLineWithText title="Social Media" />
+              <Box mt="4">
                 <SocialMediaIcons platforms={creator.platforms} />
-              </Flex>
-            </Flex>
-          </Flex>
+              </Box>
+            </Box>
+          </Box>
         )
       )}
     </Flex>
