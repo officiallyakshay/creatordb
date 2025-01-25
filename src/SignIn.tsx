@@ -1,6 +1,6 @@
 import { Flex, Input, Button, Text, Divider, useToast } from "@chakra-ui/react";
 import { FaGoogle } from "react-icons/fa"; // Google icon
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import {
 //   getAuth,
 //   signInWithEmailAndPassword,
@@ -63,6 +63,10 @@ export const SignIn = () => {
   //     setIsLoading(false);
   //   }
   // };
+
+  useEffect(() => {
+    // if signed in, navigate("/profile")
+  }, []);
 
   return (
     <Flex

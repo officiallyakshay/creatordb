@@ -127,6 +127,7 @@ export const Nav = () => {
               _hover={{ bg: "transparent" }}
               onClick={() => navigate("/sign-in")}
             >
+              {/* if signed in ? My Profile : Sign In */}
               <Text color="white">Sign In</Text>
             </Button>
           </>
