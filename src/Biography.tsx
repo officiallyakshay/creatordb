@@ -17,6 +17,7 @@ import { SocialMediaIcons } from "./utils/socialMediaIcons";
 import { VerticalLineWithText } from "./utils/indentedTitle";
 import { LuExternalLink } from "react-icons/lu";
 import { FaRegEdit } from "react-icons/fa";
+import { MdKeyboardArrowRight } from "react-icons/md";
 
 export const Biography = () => {
   const { id } = useParams();
@@ -32,7 +33,7 @@ export const Biography = () => {
         bg="white"
         p="6"
         borderRadius="lg"
-        boxShadow="md"
+        boxShadow="lg"
         width={{ base: "95%", md: "80%" }}
       >
         {/* Header Section */}
@@ -74,7 +75,7 @@ export const Biography = () => {
             <Text color="gray.700">{creator.bio}</Text>
             <Flex
               gap="4"
-              fontSize="sm"
+              fontSize={isMobile ? "sm" : "md"}
               color="gray.700"
               justify={{ base: "center", md: "left" }}
             >
@@ -88,7 +89,7 @@ export const Biography = () => {
         <Divider my="6" />
 
         {/* Personal Details */}
-        <Box w="40%">
+        <Box w={isMobile ? "auto" : "50%"}>
           <Flex align="center" justify="space-between">
             <Flex align="center" gap="3">
               <VerticalLineWithText title="Personal Details" />
@@ -124,7 +125,10 @@ export const Biography = () => {
               <Text fontSize="sm" as="b">
                 Born
               </Text>
-              {/* <Text  fontSize="sm" >{creator.dob}</Text> */}
+              {/* <Flex gap="2" flexDir="column">
+                <Text fontSize="sm">{creator.dob}</Text>
+                <Text fontSize="sm">{creator.dob_loc}</Text>
+              </Flex> */}
             </Flex>
             <Flex
               gap="2"
@@ -141,7 +145,25 @@ export const Biography = () => {
           </Box>
         </Box>
 
-        {/* Divider */}
+        <Divider my="6" />
+
+        <Box>
+          <Flex>
+            <VerticalLineWithText title="Photos and Videos" />
+            <MdKeyboardArrowRight size="30" />
+          </Flex>
+          {/* {creator.photos.map((photo: any) => (
+            <Image
+            src={photo}
+            height="200px"
+            width="200px"
+            objectFit="cover"
+            // borderRadius="full"
+            boxShadow="lg"
+          />
+          ))} */}
+        </Box>
+
         <Divider my="6" />
 
         {/* Brands Collaborated Section */}
@@ -149,7 +171,7 @@ export const Biography = () => {
           <VerticalLineWithText title="Brands Collaborated With" />
           <Grid
             mt="4"
-            templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+            // templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
             gap="4"
           >
             {creator.collaborations.map((collaboration, i) => (
@@ -170,7 +192,6 @@ export const Biography = () => {
           </Grid>
         </Box>
 
-        {/* Divider */}
         <Divider my="6" />
 
         {/* Social Media Section */}

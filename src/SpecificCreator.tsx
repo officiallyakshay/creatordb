@@ -17,6 +17,7 @@ import { formatNumber } from "./utils/formatNumber";
 import { SocialMediaIcons } from "./utils/socialMediaIcons";
 import { VerticalLineWithText } from "./utils/indentedTitle";
 import { LuExternalLink } from "react-icons/lu";
+import { MdKeyboardArrowRight } from "react-icons/md";
 
 export const SpecificCreator = () => {
   const { id } = useParams();
@@ -32,7 +33,7 @@ export const SpecificCreator = () => {
             bg="white"
             p="6"
             borderRadius="lg"
-            boxShadow="md"
+            boxShadow="lg"
             width={{ base: "95%", md: "80%" }}
           >
             {/* Header Section */}
@@ -72,28 +73,33 @@ export const SpecificCreator = () => {
                   ))}
                 </Flex>
                 <Text color="gray.700">{creator.bio}</Text>
-                <Text fontSize="md" fontWeight="medium">
-                  Followers: {formatNumber(creator.followers)}
-                </Text>
-                <Text fontSize="md" fontWeight="medium">
-                  Rating: {creator.ratings}/5
-                </Text>
-                <Button
-                  bg="black"
-                  color="white"
-                  _hover={{
-                    bg: "gray.800",
-                  }}
-                  onClick={() => navigate(`/creator/${id}/biography`)}
-                  size="sm"
-                  mt="2"
+                <Flex
+                  gap="4"
+                  fontSize={isMobile ? "sm" : "md"}
+                  color="gray.700"
+                  justify={{ base: "center", md: "left" }}
                 >
-                  Read More
-                </Button>
+                  <Text>Followers: {formatNumber(creator.followers)}</Text>
+                  <Text>Rating: {creator.ratings}/5</Text>
+                </Flex>
+                <Flex justify={isMobile ? "center" : "left"}>
+                  <Button
+                    // bg="black"
+                    bg="#69C9D0"
+                    color="white"
+                    _hover={{
+                      bg: "gray.800",
+                    }}
+                    onClick={() => navigate(`/creator/${id}/biography`)}
+                    mt="2"
+                  >
+                    Read More
+                    <MdKeyboardArrowRight size="20" />
+                  </Button>
+                </Flex>
               </Flex>
             </Flex>
 
-            {/* Divider */}
             <Divider my="6" />
 
             {/* Brands Collaborated Section */}
@@ -101,7 +107,7 @@ export const SpecificCreator = () => {
               <VerticalLineWithText title="Brands Collaborated With" />
               <Grid
                 mt="4"
-                templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+                // templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
                 gap="4"
               >
                 {creator.collaborations.map((collaboration, i) => (
@@ -121,7 +127,6 @@ export const SpecificCreator = () => {
               </Grid>
             </Box>
 
-            {/* Divider */}
             <Divider my="6" />
 
             {/* Social Media Section */}

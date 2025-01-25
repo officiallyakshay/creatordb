@@ -4,10 +4,10 @@ export const VerticalLineWithText = ({ title }: any) => {
   return (
     <Box display="flex" alignItems="center">
       <Box
-        borderLeft="2px solid black"
+        borderLeft="4px solid #69C9D0"
         height="auto"
-        paddingLeft="12px" // Adjust indentation
-        marginLeft="8px" // Adjust margin for the indentation
+        paddingLeft="12px"
+        marginLeft="8px"
       >
         <Text fontSize="xl" fontWeight="bold">
           {title}

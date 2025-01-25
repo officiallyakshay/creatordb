@@ -55,6 +55,7 @@ export const TopCreators = () => {
             As determined by CreatorDB Users
           </Text>
           <Text mt="2" fontSize="sm" color="gray.500">
+            {/* #69C9D0 */}
             {creators.length} Creators
           </Text>
         </Box>

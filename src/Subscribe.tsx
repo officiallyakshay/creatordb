@@ -65,6 +65,11 @@ export const Subscribe = () => {
                 <Td>✅</Td>
               </Tr>
               <Tr>
+                <Td>Claim page as a creator</Td>
+                <Td>❌</Td>
+                <Td>✅</Td>
+              </Tr>
+              <Tr>
                 <Td>
                   Submitted creators show immediately and do not go through a
                   review process
