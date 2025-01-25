@@ -16,6 +16,7 @@ import { formatNumber } from "./utils/formatNumber";
 import { SocialMediaIcons } from "./utils/socialMediaIcons";
 import { VerticalLineWithText } from "./utils/indentedTitle";
 import { LuExternalLink } from "react-icons/lu";
+import { FaRegEdit } from "react-icons/fa";
 
 export const Biography = () => {
   const { id } = useParams();
@@ -82,6 +83,63 @@ export const Biography = () => {
             </Flex>
           </Flex>
         </Flex>
+
+        {/* Divider */}
+        <Divider my="6" />
+
+        {/* Personal Details */}
+        <Box w="40%">
+          <Flex align="center" justify="space-between">
+            <Flex align="center" gap="3">
+              <VerticalLineWithText title="Personal Details" />
+              <Text fontSize="xs" color="gray.400">
+                Submitted by CreatorDB users.
+              </Text>
+            </Flex>
+            <Flex gap="2" align="center" cursor="pointer">
+              <Text>Edit</Text>
+              <FaRegEdit size="20" />
+            </Flex>
+          </Flex>
+          <Box mt="4">
+            <Flex
+              gap="2"
+              align="center"
+              padding="2"
+              borderBottom="1px solid black"
+              justify="space-between"
+            >
+              <Text fontSize="sm" as="b">
+                Official Website
+              </Text>
+              {/* <Text fontSize="sm">{creator.website}</Text> */}
+            </Flex>
+            <Flex
+              gap="2"
+              align="center"
+              padding="2"
+              borderBottom="1px solid black"
+              justify="space-between"
+            >
+              <Text fontSize="sm" as="b">
+                Born
+              </Text>
+              {/* <Text  fontSize="sm" >{creator.dob}</Text> */}
+            </Flex>
+            <Flex
+              gap="2"
+              align="center"
+              padding="2"
+              borderBottom="1px solid black"
+              justify="space-between"
+            >
+              <Text fontSize="sm" as="b">
+                Height
+              </Text>
+              {/* <Text fontSize="sm">{creator.height}</Text> */}
+            </Flex>
+          </Box>
+        </Box>
 
         {/* Divider */}
         <Divider my="6" />

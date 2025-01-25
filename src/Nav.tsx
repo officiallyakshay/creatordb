@@ -26,6 +26,7 @@ export const Nav = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+    console.log("searchQuery");
   };
 
   return (
@@ -41,7 +42,7 @@ export const Nav = () => {
           minWidth="auto"
           variant="outline"
           borderColor="white"
-          _hover={{ borderColor: "white", bg: "transparent" }}
+          _hover={{ bg: "transparent" }}
           onClick={() => navigate("/")}
         >
           <Text color="white">CreatorDB</Text>
@@ -104,8 +105,17 @@ export const Nav = () => {
             <Button
               minWidth="auto"
               variant="outline"
+              borderColor="#69C9D0"
+              _hover={{ bg: "transparent" }}
+              onClick={() => navigate("/subscribe")}
+            >
+              <Text color="#69C9D0">CreatorDB PRO</Text>
+            </Button>
+            <Button
+              minWidth="auto"
+              variant="outline"
               borderColor="white"
-              _hover={{ borderColor: "white", bg: "transparent" }}
+              _hover={{ bg: "transparent" }}
               onClick={() => navigate("/submit-a-creator")}
             >
               <Text color="white">Submit A Creator</Text>
@@ -114,7 +124,7 @@ export const Nav = () => {
               minWidth="auto"
               variant="outline"
               borderColor="white"
-              _hover={{ borderColor: "white", bg: "transparent" }}
+              _hover={{ bg: "transparent" }}
               onClick={() => navigate("/sign-in")}
             >
               <Text color="white">Sign In</Text>

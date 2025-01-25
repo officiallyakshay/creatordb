@@ -7,6 +7,7 @@ import { SpecificCreator } from "./SpecificCreator";
 import { Home } from "./Home";
 import { Biography } from "./Biography";
 import SubmitACreator from "./SubmitACreator";
+import { Subscribe } from "./Subscribe";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         {/* <Route path="/" element={<Home />} /> */}
         <Route path="/" element={<TopCreators />} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/subscribe" element={<Subscribe />} />
         <Route path="/creator/:id" element={<SpecificCreator />} />
         <Route path="/creator/:id/biography" element={<Biography />} />
         <Route path="/submit-a-creator" element={<SubmitACreator />} />

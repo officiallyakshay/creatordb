@@ -15,6 +15,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 // import { db } from "../firebase";
 
 const SubmitACreator = () => {
@@ -123,14 +124,23 @@ const SubmitACreator = () => {
         textAlign={{ base: "center", md: "left" }} // Center-aligned on mobile for better readability
         px={4} // Padding for mobile screens
       >
-        Disclaimer: Every submission will go through a review before posting to
-        CreatorDB
+        <Flex flexDir="column" textAlign="center">
+          <Text>
+            Disclaimer: Every submission will go through a review before posting
+            to CreatorDB
+          </Text>
+          <Text mt="2" color="#69C9D0">
+            <Link to="/subscribe">
+              This does not apply to Pro users. Click to upgrade.
+            </Link>
+          </Text>
+        </Flex>
       </Flex>
 
       <Box
         maxW="xl"
         mx="auto"
-        mt="10"
+        mt="4"
         p="6"
         borderWidth="1px"
         borderRadius="lg"

@@ -1,7 +1,69 @@
-import { Flex, Input, Button, Text } from "@chakra-ui/react";
-import { FaGoogle } from "react-icons/fa"; // For Google icon
+import { Flex, Input, Button, Text, Divider, useToast } from "@chakra-ui/react";
+import { FaGoogle } from "react-icons/fa"; // Google icon
+import { useState } from "react";
+// import {
+//   getAuth,
+//   signInWithEmailAndPassword,
+//   signInWithPopup,
+//   GoogleAuthProvider,
+// } from "firebase/auth";
+import { useNavigate } from "react-router-dom"; // For navigation after sign-in
 
 export const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
+  const navigate = useNavigate();
+  // const auth = getAuth();
+
+  // Email/password sign-in
+  // const handleEmailSignIn = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     await signInWithEmailAndPassword(auth, email, password);
+  //     toast({
+  //       title: "Signed in successfully!",
+  //       status: "success",
+  //       isClosable: true,
+  //     });
+  //     navigate("/"); // Redirect to homepage or dashboard
+  //   } catch (error: any) {
+  //     toast({
+  //       title: "Error signing in",
+  //       description: error.message,
+  //       status: "error",
+  //       isClosable: true,
+  //     });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // Google sign-in
+  // const handleGoogleSignIn = async () => {
+  //   const provider = new GoogleAuthProvider();
+  //   setIsLoading(true);
+  //   try {
+  //     await signInWithPopup(auth, provider);
+  //     toast({
+  //       title: "Signed in with Google!",
+  //       status: "success",
+  //       isClosable: true,
+  //     });
+  //     navigate("/"); // Redirect to homepage or dashboard
+  //   } catch (error: any) {
+  //     toast({
+  //       title: "Error signing in with Google",
+  //       description: error.message,
+  //       status: "error",
+  //       isClosable: true,
+  //     });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   return (
     <Flex
       p="4"
@@ -13,64 +75,76 @@ export const SignIn = () => {
     >
       <Flex
         flexDir="column"
-        width={{ base: "80%", sm: "50%", md: "30%" }} // Responsive width
+        width={{ base: "90%", sm: "70%", md: "40%", lg: "30%" }}
         gap="4"
         bg="white"
-        p="6"
+        p="8"
         borderRadius="md"
-        boxShadow="lg"
+        boxShadow="xl"
       >
-        <Text fontSize="2xl" fontWeight="bold" mb="4" textAlign="center">
-          Sign In
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+          Welcome Back
+        </Text>
+        <Text fontSize="sm" color="gray.600" textAlign="center" mb="4">
+          Sign in to access your account
         </Text>
 
-        {/* Email input */}
+        {/* Email Input */}
         <Input
           placeholder="Email"
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           border="1px solid #ccc"
           _focus={{
             borderColor: "blue.500",
           }}
         />
 
-        {/* Password input */}
+        {/* Password Input */}
         <Input
           placeholder="Password"
           type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           border="1px solid #ccc"
           _focus={{
             borderColor: "blue.500",
           }}
         />
 
-        {/* Sign in button */}
+        {/* Sign in Button */}
         <Button
           mt="4"
           colorScheme="blue"
-          onClick={() => console.log("Sign In with Email")}
+          isLoading={isLoading}
+          // onClick={handleEmailSignIn}
         >
           Sign In
         </Button>
 
-        {/* Google sign-in button */}
+        <Divider mt="4" />
+
+        {/* Google Sign-in Button */}
         <Button
           mt="4"
           variant="outline"
           colorScheme="gray"
           leftIcon={<FaGoogle />}
-          onClick={() => console.log("Sign In with Google")}
+          isLoading={isLoading}
+          // onClick={handleGoogleSignIn}
         >
           Sign In with Google
         </Button>
 
-        {/* Optional "Forgot Password" link */}
+        {/* Forgot Password */}
         <Text
           mt="4"
           fontSize="sm"
           textAlign="center"
+          color="blue.500"
           _hover={{ textDecoration: "underline", cursor: "pointer" }}
-          onClick={() => console.log("Forgot Password")}
+          onClick={() => navigate("/forgot-password")} // Adjust the route as needed
         >
           Forgot Password?
         </Text>
