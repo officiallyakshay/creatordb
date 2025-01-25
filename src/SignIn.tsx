@@ -1,72 +1,131 @@
 import { Flex, Input, Button, Text, Divider, useToast } from "@chakra-ui/react";
-import { FaGoogle } from "react-icons/fa"; // Google icon
+import { FaGoogle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-// import {
-//   getAuth,
-//   signInWithEmailAndPassword,
-//   signInWithPopup,
-//   GoogleAuthProvider,
-// } from "firebase/auth";
-import { useNavigate } from "react-router-dom"; // For navigation after sign-in
+import { auth } from "../firebase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false); // Toggle between Sign In and Sign Up
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
-  // const auth = getAuth();
 
-  // Email/password sign-in
-  // const handleEmailSignIn = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     await signInWithEmailAndPassword(auth, email, password);
-  //     toast({
-  //       title: "Signed in successfully!",
-  //       status: "success",
-  //       isClosable: true,
-  //     });
-  //     navigate("/"); // Redirect to homepage or dashboard
-  //   } catch (error: any) {
-  //     toast({
-  //       title: "Error signing in",
-  //       description: error.message,
-  //       status: "error",
-  //       isClosable: true,
-  //     });
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // Google sign-in
-  // const handleGoogleSignIn = async () => {
-  //   const provider = new GoogleAuthProvider();
-  //   setIsLoading(true);
-  //   try {
-  //     await signInWithPopup(auth, provider);
-  //     toast({
-  //       title: "Signed in with Google!",
-  //       status: "success",
-  //       isClosable: true,
-  //     });
-  //     navigate("/"); // Redirect to homepage or dashboard
-  //   } catch (error: any) {
-  //     toast({
-  //       title: "Error signing in with Google",
-  //       description: error.message,
-  //       status: "error",
-  //       isClosable: true,
-  //     });
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
+  // Check if user is already signed in
   useEffect(() => {
-    // if signed in, navigate("/profile")
-  }, []);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/profile"); // Redirect to profile if already signed in
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
+
+  // Handle email sign-in
+  const handleEmailSignIn = async () => {
+    setIsLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast({
+        title: "Signed in successfully!",
+        status: "success",
+        isClosable: true,
+      });
+      navigate("/profile"); // Navigate to profile or wherever the user should be redirected after login
+    } catch (error: any) {
+      toast({
+        title: "Error signing in",
+        description: error.message,
+        status: "error",
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle email sign-up
+  const handleEmailSignUp = async () => {
+    setIsLoading(true);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      toast({
+        title: "Account created successfully!",
+        status: "success",
+        isClosable: true,
+      });
+      navigate("/profile"); // Navigate to profile after successful sign-up
+    } catch (error: any) {
+      toast({
+        title: "Error signing up",
+        description: error.message,
+        status: "error",
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle Google sign-in
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    setIsLoading(true);
+    try {
+      await signInWithPopup(auth, provider);
+      toast({
+        title: "Signed in with Google!",
+        status: "success",
+        isClosable: true,
+      });
+      navigate("/profile"); // Navigate to profile after Google login
+    } catch (error: any) {
+      toast({
+        title: "Error signing in with Google",
+        description: error.message,
+        status: "error",
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle password reset
+  const handleForgotPassword = async () => {
+    try {
+      if (!email) {
+        toast({
+          title: "Enter your email to reset password",
+          status: "info",
+          isClosable: true,
+        });
+        return;
+      }
+      await sendPasswordResetEmail(auth, email);
+      toast({
+        title: "Password reset email sent!",
+        status: "success",
+        isClosable: true,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error sending password reset email",
+        description: error.message,
+        status: "error",
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Flex
@@ -87,13 +146,14 @@ export const SignIn = () => {
         boxShadow="xl"
       >
         <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-          Welcome Back
+          {isSignUp ? "Create an Account" : "Welcome Back"}
         </Text>
         <Text fontSize="sm" color="gray.600" textAlign="center" mb="4">
-          Sign in to access your account
+          {isSignUp
+            ? "Sign up to create your account"
+            : "Sign in to access your account"}
         </Text>
 
-        {/* Email Input */}
         <Input
           placeholder="Email"
           type="email"
@@ -105,7 +165,6 @@ export const SignIn = () => {
           }}
         />
 
-        {/* Password Input */}
         <Input
           placeholder="Password"
           type="password"
@@ -117,40 +176,52 @@ export const SignIn = () => {
           }}
         />
 
-        {/* Sign in Button */}
         <Button
           mt="4"
           colorScheme="blue"
           isLoading={isLoading}
-          // onClick={handleEmailSignIn}
+          onClick={isSignUp ? handleEmailSignUp : handleEmailSignIn}
         >
-          Sign In
+          {isSignUp ? "Sign Up" : "Sign In"}
         </Button>
 
         <Divider mt="4" />
 
-        {/* Google Sign-in Button */}
         <Button
           mt="4"
           variant="outline"
           colorScheme="gray"
           leftIcon={<FaGoogle />}
           isLoading={isLoading}
-          // onClick={handleGoogleSignIn}
+          onClick={handleGoogleSignIn}
         >
-          Sign In with Google
+          {isSignUp ? "Sign Up with Google" : "Sign In with Google"}
         </Button>
 
-        {/* Forgot Password */}
+        {!isSignUp && (
+          <Text
+            mt="4"
+            fontSize="sm"
+            textAlign="center"
+            color="blue.500"
+            _hover={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={handleForgotPassword}
+          >
+            Forgot Password?
+          </Text>
+        )}
+
         <Text
           mt="4"
           fontSize="sm"
           textAlign="center"
           color="blue.500"
           _hover={{ textDecoration: "underline", cursor: "pointer" }}
-          onClick={() => navigate("/forgot-password")} // Adjust the route as needed
+          onClick={() => setIsSignUp(!isSignUp)}
         >
-          Forgot Password?
+          {isSignUp
+            ? "Already have an account? Sign In"
+            : "Don't have an account? Sign Up"}
         </Text>
       </Flex>
     </Flex>

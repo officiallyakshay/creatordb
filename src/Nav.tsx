@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Flex,
   Input,
@@ -14,19 +14,31 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { RxHamburgerMenu, RxMagnifyingGlass } from "react-icons/rx";
+import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth"; // Import Firebase auth
 
 export const Nav = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Track if search input should be shown
   const [searchQuery, setSearchQuery] = useState("");
+  const [user, setUser] = useState(null); // Track authenticated user
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
   const isMobile = useBreakpointValue({ base: true, md: false });
 
+  const auth = getAuth(); // Initialize Firebase Auth
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
+      setUser(currentUser); // Set the user object if logged in, otherwise null
+    });
+    return unsubscribe; // Cleanup listener on unmount
+  }, [auth]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    console.log("searchQuery");
   };
 
   return (
@@ -125,10 +137,18 @@ export const Nav = () => {
               variant="outline"
               borderColor="white"
               _hover={{ bg: "transparent" }}
-              onClick={() => navigate("/sign-in")}
+              onClick={() =>
+                user ? navigate("/profile") : navigate("/sign-in")
+              }
             >
-              {/* if signed in ? My Profile : Sign In */}
-              <Text color="white">Sign In</Text>
+              {user ? (
+                <Flex align="center" gap="2">
+                  <FaUserCircle color="white" />
+                  <Text color="white">My Profile</Text>
+                </Flex>
+              ) : (
+                <Text color="white">Sign In</Text>
+              )}
             </Button>
           </>
         )}
@@ -154,14 +174,27 @@ export const Nav = () => {
             <Button
               variant="outline"
               borderColor="white"
-              _hover={{ borderColor: "white", bg: "transparent" }}
+              _hover={{ bg: "transparent" }}
               onClick={() => {
-                navigate("/sign-in");
-                onClose();
+                if (user) {
+                  navigate("/profile");
+                  onClose(); // Close the modal after navigating to profile
+                } else {
+                  navigate("/sign-in");
+                  onClose(); // Close the modal after navigating to sign-in
+                }
               }}
             >
-              Sign In
+              {user ? (
+                <Flex align="center" gap="2">
+                  <FaUserCircle color="white" />
+                  <Text color="black">My Profile</Text>
+                </Flex>
+              ) : (
+                <Text color="black">Sign In</Text>
+              )}
             </Button>
+
             <Button
               variant="outline"
               borderColor="white"

@@ -11,16 +11,11 @@ import {
   TableContainer,
   Button,
 } from "@chakra-ui/react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 export const Subscribe = () => {
   const [searchParams] = useSearchParams();
   const status = searchParams.get("status");
-
-  const handleSubscribe = () => {
-    // Redirect to Stripe checkout page
-    console.log("Redirecting to Stripe payment page...");
-  };
 
   return (
     <Box maxW="4xl" mx="auto" p="6">
@@ -87,16 +82,17 @@ export const Subscribe = () => {
         </TableContainer>
 
         {/* Subscribe Button */}
-        <Button
-          mt="6"
-          bg="#69C9D0"
-          color="white"
-          _hover={{ bg: "#5ab9c3" }}
-          size="lg"
-          onClick={handleSubscribe}
-        >
-          Subscribe to CreatorDB Pro
-        </Button>
+        <Link to="" target="_blank">
+          <Button
+            mt="6"
+            bg="#69C9D0"
+            color="white"
+            _hover={{ bg: "#5ab9c3" }}
+            size="lg"
+          >
+            Subscribe to CreatorDB Pro
+          </Button>
+        </Link>
       </VStack>
     </Box>
   );
