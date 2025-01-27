@@ -11,6 +11,12 @@ import {
   useToast,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -18,8 +24,8 @@ import { collection, addDoc } from "@firebase/firestore";
 
 export const SubmitACreator = () => {
   const toast = useToast();
-  const isMobile = useBreakpointValue({ base: true, md: false });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -37,8 +43,12 @@ export const SubmitACreator = () => {
     collaborations: [{ brand: "", url: "" }],
     ratings: "",
   });
+  const [photoURL, setPhotoURL] = useState("");
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
+  const storage = getStorage();
+  const user = auth.currentUser;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -83,6 +93,40 @@ export const SubmitACreator = () => {
     });
   };
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const storageRef = ref(storage, `profilePictures/${user?.uid}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    setUploading(true);
+
+    uploadTask.on(
+      "state_changed",
+      null,
+      (error) => {
+        setUploading(false);
+        toast({
+          title: "Error uploading photo.",
+          description: error.message,
+          status: "error",
+          isClosable: true,
+        });
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        setPhotoURL(downloadURL);
+        setUploading(false);
+        toast({
+          title: "Photo uploaded successfully!",
+          status: "success",
+          isClosable: true,
+        });
+      }
+    );
+  };
+
   const handleSubmit = async () => {
     const { name, username, bio, followers, platforms, genres, ratings } =
       formData;
@@ -102,7 +146,7 @@ export const SubmitACreator = () => {
     ) {
       toast({
         title: "Incomplete Form",
-        description: "Please fill out all required fields before submitting.",
+        description: "Please fill out all fields before submitting.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -212,12 +256,16 @@ export const SubmitACreator = () => {
               }
             />
             <Input
-              placeholder="Profile Image URL"
-              value={formData.profileImage}
-              onChange={(e) =>
-                setFormData({ ...formData, profileImage: e.target.value })
-              }
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+              disabled={uploading}
             />
+            {uploading && (
+              <Text fontSize="sm" color="gray.500" mt="2">
+                Uploading photo, please wait...
+              </Text>
+            )}
             <Textarea
               placeholder="Bio"
               value={formData.bio}

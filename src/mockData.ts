@@ -6,6 +6,12 @@ export const mockData = [
     profileImage: "/mrb.webp",
     bio: "Philanthropist and YouTuber known for insane challenges, giveaways, and raising millions for charity.",
     followers: 200000000,
+    website: "https://www.mrbeast.com",
+    born: {
+      date: "1998-05-07",
+      location: "Greenville, North Carolina, USA",
+    },
+    height: "6'3\"",
     platforms: [
       {
         name: "TikTok",
@@ -52,6 +58,12 @@ export const mockData = [
     profileImage: "/kai.webp",
     bio: "A rising star in the world of streaming and content creation, known for his energetic streams and involvement in the gaming community.",
     followers: 15000000,
+    website: "https://www.kaicenat.com",
+    born: {
+      date: "2001-12-16",
+      location: "New York City, New York, USA",
+    },
+    height: "5'8\"",
     platforms: [
       {
         name: "Twitch",
@@ -89,6 +101,12 @@ export const mockData = [
     profileImage: "/swagg.jpg",
     bio: "Popular Call of Duty content creator and streamer, known for his skills in gaming and his entertaining personality.",
     followers: 5000000,
+    website: "https://www.swagg.com",
+    born: {
+      date: "1996-04-14",
+      location: "United States",
+    },
+    height: "6'0\"",
     platforms: [
       {
         name: "Twitch",
@@ -126,6 +144,12 @@ export const mockData = [
     profileImage: "/max.jpg",
     bio: "Known for his comedic content and gaming streams, PlaqueboyMax brings laughter and high energy to his audience.",
     followers: 3000000,
+    website: "https://www.plaqueboymax.com",
+    born: {
+      date: "1997-08-22",
+      location: "United States",
+    },
+    height: "5'10\"",
     platforms: [
       {
         name: "Twitch",
