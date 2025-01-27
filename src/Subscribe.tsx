@@ -8,6 +8,9 @@ import {
   Divider,
   useBreakpointValue,
   Center,
+  Switch,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -19,6 +22,7 @@ export const Subscribe = () => {
   const [searchParams] = useSearchParams();
   const status = searchParams.get("status");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAnnual, setIsAnnual] = useState(false); // State for the slider
   const auth = getAuth();
 
   useEffect(() => {
@@ -61,6 +65,42 @@ export const Subscribe = () => {
         <Text fontSize="2xl" fontWeight="bold">
           Compare Plans
         </Text>
+
+        {/* Switch for Monthly/Annual */}
+        <FormControl
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          gap="4"
+        >
+          <FormLabel mb="0" fontWeight="bold" fontSize="lg" color="gray.700">
+            Monthly
+          </FormLabel>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            bg="gray.100"
+            p="2"
+            borderRadius="full"
+            w="16"
+            h="8"
+            boxShadow="sm"
+          >
+            <Switch
+              size="lg"
+              colorScheme="teal"
+              isChecked={isAnnual}
+              onChange={() => setIsAnnual(!isAnnual)}
+            />
+          </Box>
+          <FormLabel mb="0" fontWeight="bold" fontSize="lg" color="#69C9D0">
+            Annual{" "}
+            <Text as="span" color="gray.500">
+              (Save $90)
+            </Text>
+          </FormLabel>
+        </FormControl>
 
         {/* Pricing Plans */}
         <HStack
@@ -153,7 +193,7 @@ export const Subscribe = () => {
                 textAlign="center"
                 w="full"
               >
-                Pro
+                Pro ({isAnnual ? "Annual" : "Monthly"})
               </Text>
               <HStack>
                 <Text>✅</Text>
@@ -175,20 +215,25 @@ export const Subscribe = () => {
             <Divider my="4" />
             <VStack>
               <Text fontSize="lg" fontWeight="bold" textAlign="center">
-                $20/month
+                {isAnnual ? "$150/year" : "$20/month"}
               </Text>
+              {isAnnual && (
+                <Text fontSize="sm" color="gray.200" fontWeight="medium">
+                  Save $90 compared to the monthly plan
+                </Text>
+              )}
               <Center mt="4">
-                <Link to="" target="_blank">
-                  <Button
-                    bg="white"
-                    color="#69C9D0"
-                    _hover={{ bg: "#f0f0f0" }}
-                    size="lg"
-                    fontWeight="bold"
-                  >
-                    Subscribe to Pro
-                  </Button>
-                </Link>
+                {/* <Link to="" target="_blank"> */}
+                <Button
+                  bg="white"
+                  color="#69C9D0"
+                  _hover={{ bg: "#f0f0f0" }}
+                  size="lg"
+                  fontWeight="bold"
+                >
+                  Subscribe to Pro
+                </Button>
+                {/* </Link> */}
               </Center>
             </VStack>
           </Box>
