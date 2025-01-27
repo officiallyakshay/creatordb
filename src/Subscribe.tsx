@@ -2,15 +2,12 @@ import {
   Box,
   Text,
   VStack,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
+  HStack,
   Button,
   useToast,
+  Divider,
+  useBreakpointValue,
+  Center,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -65,62 +62,137 @@ export const Subscribe = () => {
           Compare Plans
         </Text>
 
-        {/* Styled Table */}
-        <TableContainer w="100%">
-          <Table variant="striped" size="md">
-            <Thead>
-              <Tr bg="#69C9D0">
-                <Th color="white" fontSize="lg">
-                  Feature
-                </Th>
-                <Th color="white" fontSize="lg">
-                  Free
-                </Th>
-                <Th color="white" fontSize="lg">
-                  Pro
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>Browse CreatorDB</Td>
-                <Td>✅</Td>
-                <Td>✅</Td>
-              </Tr>
-              <Tr>
-                <Td>Claim page as a creator</Td>
-                <Td>❌</Td>
-                <Td>✅</Td>
-              </Tr>
-              <Tr>
-                <Td>
-                  Submitted creators show immediately and do not go through a
-                  review process
-                </Td>
-                <Td>❌</Td>
-                <Td>✅</Td>
-              </Tr>
-              <Tr>
-                <Td>Edit any existing post</Td>
-                <Td>❌</Td>
-                <Td>✅</Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </TableContainer>
+        {/* Pricing Plans */}
+        <HStack
+          spacing="4"
+          flexWrap="wrap"
+          justifyContent="center"
+          alignItems="stretch"
+        >
+          <Box
+            flex="1"
+            minW={{ base: "100%", md: "45%" }}
+            bg="gray.100"
+            color="black"
+            border="1px"
+            borderColor="gray.300"
+            borderRadius="lg"
+            p="6"
+            boxShadow="xl"
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
+          >
+            <VStack align="start" spacing="3">
+              <Text
+                fontSize="xl"
+                fontWeight="bold"
+                mb="4"
+                textAlign="center"
+                w="full"
+              >
+                Free
+              </Text>
+              <HStack>
+                <Text>✅</Text>
+                <Text>Browse CreatorDB</Text>
+              </HStack>
+              <HStack>
+                <Text>❌</Text>
+                <Text>Claim page as a creator</Text>
+              </HStack>
+              <HStack>
+                <Text>❌</Text>
+                <Text>Submitted creators go through a review process</Text>
+              </HStack>
+              <HStack>
+                <Text>❌</Text>
+                <Text>Edit any existing post</Text>
+              </HStack>
+            </VStack>
+            <Divider my="4" />
+            <VStack>
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                $0/month
+              </Text>
+              <Center mt="4">
+                <Button
+                  bg="white"
+                  color="gray.600"
+                  _hover={{ bg: "gray.200" }}
+                  size="lg"
+                  fontWeight="bold"
+                  isDisabled
+                >
+                  Included for Free
+                </Button>
+              </Center>
+            </VStack>
+          </Box>
 
-        {/* Subscribe Button */}
-        <Link to="" target="_blank">
-          <Button
-            mt="6"
+          {/* Pro Plan */}
+          <Box
+            flex="1"
+            minW={{ base: "100%", md: "45%" }}
             bg="#69C9D0"
             color="white"
-            _hover={{ bg: "#5ab9c3" }}
-            size="lg"
+            border="1px"
+            borderColor="#5ab9c3"
+            borderRadius="lg"
+            p="6"
+            boxShadow="xl"
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
           >
-            Subscribe to CreatorDB Pro
-          </Button>
-        </Link>
+            <VStack align="start" spacing="3">
+              <Text
+                fontSize="xl"
+                fontWeight="bold"
+                mb="4"
+                textAlign="center"
+                w="full"
+              >
+                Pro
+              </Text>
+              <HStack>
+                <Text>✅</Text>
+                <Text>Browse CreatorDB</Text>
+              </HStack>
+              <HStack>
+                <Text>✅</Text>
+                <Text>Claim page as a creator</Text>
+              </HStack>
+              <HStack>
+                <Text>✅</Text>
+                <Text>Submitted creators show immediately without review</Text>
+              </HStack>
+              <HStack>
+                <Text>✅</Text>
+                <Text>Edit any existing post</Text>
+              </HStack>
+            </VStack>
+            <Divider my="4" />
+            <VStack>
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                $20/month
+              </Text>
+              <Center mt="4">
+                <Link to="" target="_blank">
+                  <Button
+                    bg="white"
+                    color="#69C9D0"
+                    _hover={{ bg: "#f0f0f0" }}
+                    size="lg"
+                    fontWeight="bold"
+                  >
+                    Subscribe to Pro
+                  </Button>
+                </Link>
+              </Center>
+            </VStack>
+          </Box>
+        </HStack>
       </VStack>
     </Box>
   );
