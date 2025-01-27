@@ -43,7 +43,7 @@ export const SubmitACreator = () => {
     collaborations: [{ brand: "", url: "" }],
     ratings: "",
   });
-  const [photoURL, setPhotoURL] = useState("");
+  // const [photoURL, setPhotoURL] = useState("");
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
@@ -93,39 +93,39 @@ export const SubmitACreator = () => {
     });
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
 
-    const storageRef = ref(storage, `profilePictures/${user?.uid}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+  //   const storageRef = ref(storage, `profilePictures/${user?.uid}`);
+  //   const uploadTask = uploadBytesResumable(storageRef, file);
 
-    setUploading(true);
+  //   setUploading(true);
 
-    uploadTask.on(
-      "state_changed",
-      null,
-      (error) => {
-        setUploading(false);
-        toast({
-          title: "Error uploading photo.",
-          description: error.message,
-          status: "error",
-          isClosable: true,
-        });
-      },
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        setPhotoURL(downloadURL);
-        setUploading(false);
-        toast({
-          title: "Photo uploaded successfully!",
-          status: "success",
-          isClosable: true,
-        });
-      }
-    );
-  };
+  //   uploadTask.on(
+  //     "state_changed",
+  //     null,
+  //     (error) => {
+  //       setUploading(false);
+  //       toast({
+  //         title: "Error uploading photo.",
+  //         description: error.message,
+  //         status: "error",
+  //         isClosable: true,
+  //       });
+  //     },
+  //     async () => {
+  //       const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  //       setPhotoURL(downloadURL);
+  //       setUploading(false);
+  //       toast({
+  //         title: "Photo uploaded successfully!",
+  //         status: "success",
+  //         isClosable: true,
+  //       });
+  //     }
+  //   );
+  // };
 
   const handleSubmit = async () => {
     const { name, username, bio, followers, platforms, genres, ratings } =
@@ -255,7 +255,7 @@ export const SubmitACreator = () => {
                 setFormData({ ...formData, username: e.target.value })
               }
             />
-            <Input
+            {/* <Input
               type="file"
               accept="image/*"
               onChange={handlePhotoUpload}
@@ -265,7 +265,7 @@ export const SubmitACreator = () => {
               <Text fontSize="sm" color="gray.500" mt="2">
                 Uploading photo, please wait...
               </Text>
-            )}
+            )} */}
             <Textarea
               placeholder="Bio"
               value={formData.bio}

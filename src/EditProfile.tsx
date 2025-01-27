@@ -27,7 +27,7 @@ export const EditProfile = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
+  // const [photoURL, setPhotoURL] = useState("");
   const [email, setEmail] = useState("");
   const [uploading, setUploading] = useState(false);
   const toast = useToast();
@@ -82,51 +82,51 @@ export const EditProfile = () => {
           setName(profileData.name || "");
           setUsername(profileData.username || "");
           setBio(profileData.bio || "");
-          setPhotoURL(profileData.photoURL || "");
+          // setPhotoURL(profileData.photoURL || "");
         }
       };
       fetchProfile();
     }
   }, [user]);
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
 
-    const storageRef = ref(storage, `profilePictures/${user?.uid}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+  //   const storageRef = ref(storage, `profilePictures/${user?.uid}`);
+  //   const uploadTask = uploadBytesResumable(storageRef, file);
 
-    setUploading(true);
+  //   setUploading(true);
 
-    uploadTask.on(
-      "state_changed",
-      null,
-      (error) => {
-        setUploading(false);
-        toast({
-          title: "Error uploading photo.",
-          description: error.message,
-          status: "error",
-          isClosable: true,
-        });
-      },
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        setPhotoURL(downloadURL);
-        setUploading(false);
-        toast({
-          title: "Photo uploaded successfully!",
-          status: "success",
-          isClosable: true,
-        });
-      }
-    );
-  };
+  //   uploadTask.on(
+  //     "state_changed",
+  //     null,
+  //     (error) => {
+  //       setUploading(false);
+  //       toast({
+  //         title: "Error uploading photo.",
+  //         description: error.message,
+  //         status: "error",
+  //         isClosable: true,
+  //       });
+  //     },
+  //     async () => {
+  //       const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  //       setPhotoURL(downloadURL);
+  //       setUploading(false);
+  //       toast({
+  //         title: "Photo uploaded successfully!",
+  //         status: "success",
+  //         isClosable: true,
+  //       });
+  //     }
+  //   );
+  // };
 
   const handleSubmit = async () => {
     if (!user) return;
-
-    if (!name.trim() || !username.trim() || !bio.trim() || !photoURL.trim()) {
+    // || !photoURL.trim()
+    if (!name.trim() || !username.trim() || !bio.trim()) {
       toast({
         title: "All fields are required.",
         description: "Please fill out every field before saving.",
@@ -142,7 +142,7 @@ export const EditProfile = () => {
         name: name.trim(),
         username: username.trim(),
         bio: bio.trim(),
-        photoURL: photoURL.trim(),
+        // photoURL: photoURL.trim(),
         email,
       });
       toast({
@@ -190,7 +190,7 @@ export const EditProfile = () => {
         <Flex justify="center" mb="6">
           <Avatar
             size="xl"
-            src={photoURL || "https://via.placeholder.com/150"}
+            // src={photoURL || "https://via.placeholder.com/150"}
             name={name || "Your Name"}
           />
         </Flex>
@@ -200,7 +200,7 @@ export const EditProfile = () => {
           <Input type="email" value={email} isDisabled />
         </FormControl>
 
-        <FormControl mb="4">
+        {/* <FormControl mb="4">
           <FormLabel>Profile Picture</FormLabel>
           <Input
             type="file"
@@ -213,7 +213,7 @@ export const EditProfile = () => {
               Uploading photo, please wait...
             </Text>
           )}
-        </FormControl>
+        </FormControl> */}
 
         <FormControl mb="4">
           <FormLabel>Name</FormLabel>

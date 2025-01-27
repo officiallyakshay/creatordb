@@ -55,9 +55,14 @@ export const SpecificCreator = () => {
                 gap="3"
                 textAlign={{ base: "center", md: "left" }}
               >
-                <Heading size="lg" fontWeight="bold" color="black">
-                  {creator.name}
-                </Heading>
+                <Flex justify="space-between">
+                  <Heading size="lg" fontWeight="bold" color="black">
+                    {creator.name}
+                  </Heading>
+                  <Button bg="black" color="white" _hover={{ opacity: 0.7 }}>
+                    Claim Page
+                  </Button>
+                </Flex>
                 <Flex
                   wrap="wrap"
                   gap="2"

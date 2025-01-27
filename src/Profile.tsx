@@ -140,7 +140,7 @@ export const Profile = () => {
         <Flex justify="center" mb="6">
           <Avatar
             size="xl"
-            src={profile.photoURL || "https://via.placeholder.com/150"}
+            // src={profile.photoURL || "https://via.placeholder.com/150"}
             name={profile.name || "Your Name"}
           />
         </Flex>

@@ -83,8 +83,8 @@ export const Biography = () => {
         >
           <Image
             src={creator.profileImage}
-            height="200px"
-            width="200px"
+            height="100px"
+            width="100px"
             objectFit="cover"
             borderRadius="full"
             boxShadow="lg"
@@ -105,7 +105,7 @@ export const Biography = () => {
                 </Text>
               ))}
             </Flex>
-            <Text color="gray.700">{creator.bio}</Text>
+
             <Flex
               gap="4"
               fontSize={isMobile ? "sm" : "md"}
@@ -118,7 +118,15 @@ export const Biography = () => {
           </Flex>
         </Flex>
 
-        {/* Divider */}
+        <Divider my="6" />
+
+        <Box>
+          <VerticalLineWithText title="Mini Bio" />
+          <Text mt="4" color="gray.700">
+            {creator.bio}
+          </Text>
+        </Box>
+
         <Divider my="6" />
 
         {/* Personal Details */}
@@ -179,7 +187,7 @@ export const Biography = () => {
                     placeholder={creator.height}
                   />
                 </FormControl>
-                <Button colorScheme="blue" onClick={handleSaveChanges}>
+                <Button bg="#69C9D0" color="white" onClick={handleSaveChanges}>
                   Save Changes
                 </Button>
               </>
