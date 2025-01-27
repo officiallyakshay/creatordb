@@ -10,12 +10,40 @@ import {
   Td,
   TableContainer,
   Button,
+  useToast,
 } from "@chakra-ui/react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 export const Subscribe = () => {
+  const toast = useToast();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const status = searchParams.get("status");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+        toast({
+          title: "Sign In Required",
+          description:
+            "You must be signed in to check out what Pro has to offer.",
+          status: "info",
+          duration: 3000,
+          isClosable: true,
+        });
+        navigate("/sign-in");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, toast, navigate]);
 
   return (
     <Box maxW="4xl" mx="auto" p="6">

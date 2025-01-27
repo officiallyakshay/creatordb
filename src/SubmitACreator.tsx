@@ -1,50 +1,85 @@
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Flex,
   Input,
+  Select,
+  Text,
   Textarea,
   VStack,
-  HStack,
-  Text,
-  FormControl,
-  FormLabel,
-  Checkbox,
-  CheckboxGroup,
-  Stack,
   useToast,
-  Flex,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-// import { db } from "../firebase";
+import { Link, useNavigate } from "react-router-dom";
+import { db } from "../firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { collection, addDoc } from "@firebase/firestore";
 
-const SubmitACreator = () => {
+export const SubmitACreator = () => {
   const toast = useToast();
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     username: "",
+    profileImage: "",
     bio: "",
     followers: "",
-    platforms: [] as string[],
+    platforms: [
+      { name: "YouTube", handle: "", url: "" },
+      { name: "Instagram", handle: "", url: "" },
+      { name: "Twitter", handle: "", url: "" },
+      { name: "TikTok", handle: "", url: "" },
+      { name: "Twitch", handle: "", url: "" },
+    ],
     genres: "",
-    collaborations: "",
+    collaborations: [{ brand: "", url: "" }],
     ratings: "",
   });
+  const navigate = useNavigate();
+  const auth = getAuth();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+        toast({
+          title: "Sign In Required",
+          description: "You must be signed in to submit a creator.",
+          status: "info",
+          duration: 3000,
+          isClosable: true,
+        });
+        navigate("/sign-in");
+      }
     });
+
+    return () => unsubscribe();
+  }, [auth, toast, navigate]);
+
+  // @ts-ignore
+  const handlePlatformChange = (index, field, value) => {
+    const updatedPlatforms = [...formData.platforms];
+    // @ts-ignore
+    updatedPlatforms[index][field] = value;
+    setFormData({ ...formData, platforms: updatedPlatforms });
   };
 
-  const handlePlatformChange = (selectedPlatforms: string[]) => {
+  // @ts-ignore
+  const handleCollaborationChange = (index, field, value) => {
+    const updatedCollaborations = [...formData.collaborations];
+    // @ts-ignore
+    updatedCollaborations[index][field] = value;
+    setFormData({ ...formData, collaborations: updatedCollaborations });
+  };
+
+  const addCollaboration = () => {
     setFormData({
       ...formData,
-      platforms: selectedPlatforms,
+      collaborations: [...formData.collaborations, { brand: "", url: "" }],
     });
   };
 
@@ -52,12 +87,16 @@ const SubmitACreator = () => {
     const { name, username, bio, followers, platforms, genres, ratings } =
       formData;
 
+    const hasPlatformFilled = platforms.some(
+      (platform) => platform.handle.trim() || platform.url.trim()
+    );
+
     if (
       !name.trim() ||
       !username.trim() ||
       !bio.trim() ||
       !followers.trim() ||
-      platforms.length === 0 ||
+      !hasPlatformFilled ||
       !genres.trim() ||
       !ratings.trim()
     ) {
@@ -71,47 +110,54 @@ const SubmitACreator = () => {
       return;
     }
 
-    // Save the form data to Firebase Firestore in the 'pending_creators' collection
-    // try {
-    //   await db.collection("pending_creators").add(formData);
-    //   toast({
-    //     title: "Creator Submitted!",
-    //     description:
-    //       "Your submission has been sent and will be reviewed shortly.",
-    //     status: "success",
-    //     duration: 3000,
-    //     isClosable: true,
-    //   });
-    // } catch (error) {
-    //   toast({
-    //     title: "Error",
-    //     description: "There was an issue with your submission.",
-    //     status: "error",
-    //     duration: 3000,
-    //     isClosable: true,
-    //   });
-    //   console.error("Error saving form data: ", error);
-    // }
+    try {
+      const currentUser = auth.currentUser;
+      const email = currentUser?.email;
 
-    setFormData({
-      name: "",
-      username: "",
-      bio: "",
-      followers: "",
-      platforms: [],
-      genres: "",
-      collaborations: "",
-      ratings: "",
-    });
+      const submissionData = {
+        ...formData,
+        submittedBy: email,
+      };
 
-    toast({
-      title: "Creator Submitted",
-      description:
-        "Thanks for the submission! We're looking into your submission and will add your creator to CreatorDB if it makes sense to.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+      await addDoc(collection(db, "pending-creators"), submissionData);
+
+      toast({
+        title: "Creator Submitted!",
+        description:
+          "Your submission has been sent and will be reviewed shortly.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        username: "",
+        profileImage: "",
+        bio: "",
+        followers: "",
+        platforms: [
+          { name: "YouTube", handle: "", url: "" },
+          { name: "Instagram", handle: "", url: "" },
+          { name: "Twitter", handle: "", url: "" },
+          { name: "TikTok", handle: "", url: "" },
+          { name: "Twitch", handle: "", url: "" },
+        ],
+        genres: "",
+        collaborations: [{ brand: "", url: "" }],
+        ratings: "",
+      });
+    } catch (error) {
+      console.error("Error saving form data: ", error);
+      toast({
+        title: "Error",
+        description: "There was an issue with your submission.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -127,7 +173,7 @@ const SubmitACreator = () => {
         <Flex flexDir="column" textAlign="center">
           <Text>
             Disclaimer: Every submission will go through a review before posting
-            to CreatorDB
+            to CreatorDB.
           </Text>
           <Text mt="2" color="#69C9D0">
             <Link to="/subscribe">
@@ -146,141 +192,129 @@ const SubmitACreator = () => {
         borderRadius="lg"
         boxShadow="lg"
       >
-        <Text fontSize="2xl" mb="6" fontWeight="bold" textAlign="center">
-          Submit a Creator
-        </Text>
-        <VStack spacing={5} align="stretch">
-          <FormControl id="name" isRequired>
-            <FormLabel>Name</FormLabel>
+        <Box p="8" maxW="600px" mx="auto">
+          <VStack spacing="4" align="stretch">
+            <Text fontSize="xl" fontWeight="bold">
+              Submit a Creator
+            </Text>
             <Input
-              type="text"
-              name="name"
+              placeholder="Full Name"
               value={formData.name}
-              onChange={handleChange}
-              placeholder="Creator's Name"
-              borderColor="gray.300"
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
             />
-          </FormControl>
-
-          <FormControl id="username" isRequired>
-            <FormLabel>Username</FormLabel>
             <Input
-              type="text"
-              name="username"
+              placeholder="Username"
               value={formData.username}
-              onChange={handleChange}
-              placeholder="Creator's Username"
-              borderColor="gray.300"
+              onChange={(e) =>
+                setFormData({ ...formData, username: e.target.value })
+              }
             />
-          </FormControl>
-
-          <FormControl id="bio">
-            <FormLabel>Bio</FormLabel>
+            <Input
+              placeholder="Profile Image URL"
+              value={formData.profileImage}
+              onChange={(e) =>
+                setFormData({ ...formData, profileImage: e.target.value })
+              }
+            />
             <Textarea
-              name="bio"
+              placeholder="Bio"
               value={formData.bio}
-              onChange={handleChange}
-              placeholder="Creator's Bio"
-              borderColor="gray.300"
+              onChange={(e) =>
+                setFormData({ ...formData, bio: e.target.value })
+              }
             />
-          </FormControl>
-
-          <FormControl id="followers" isRequired>
-            <FormLabel>Followers</FormLabel>
             <Input
+              placeholder="Followers Count"
               type="number"
-              name="followers"
               value={formData.followers}
-              onChange={handleChange}
-              placeholder="Total Number of Followers"
-              borderColor="gray.300"
+              onChange={(e) =>
+                setFormData({ ...formData, followers: e.target.value })
+              }
             />
-          </FormControl>
-
-          <FormControl id="platforms" isRequired>
-            <FormLabel>Platforms</FormLabel>
-            <CheckboxGroup
-              value={formData.platforms}
-              onChange={handlePlatformChange}
-            >
-              <Stack spacing={2} direction="column">
-                <Checkbox value="YouTube">YouTube</Checkbox>
-                <Checkbox value="Instagram">Instagram</Checkbox>
-                <Checkbox value="TikTok">TikTok</Checkbox>
-                <Checkbox value="Twitter">Twitter</Checkbox>
-              </Stack>
-            </CheckboxGroup>
-          </FormControl>
-
-          <FormControl id="genres" isRequired>
-            <FormLabel>Genres</FormLabel>
-            <Input
-              type="text"
-              name="genres"
+            <Text fontWeight="semibold">Social Platforms</Text>
+            {formData.platforms.map((platform, index) => (
+              <Flex key={index} gap="2" flexDir={isMobile ? "column" : "row"}>
+                <Select
+                  value={platform.name}
+                  onChange={(e) =>
+                    handlePlatformChange(index, "name", e.target.value)
+                  }
+                >
+                  <option value="YouTube">YouTube</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="Twitter">Twitter</option>
+                  <option value="TikTok">TikTok</option>
+                  <option value="Twitch">Twitch</option>
+                </Select>
+                <Input
+                  placeholder={`${platform.name} Handle`}
+                  value={platform.handle}
+                  onChange={(e) =>
+                    handlePlatformChange(index, "handle", e.target.value)
+                  }
+                />
+                <Input
+                  placeholder={`${platform.name} URL`}
+                  value={platform.url}
+                  onChange={(e) =>
+                    handlePlatformChange(index, "url", e.target.value)
+                  }
+                />
+              </Flex>
+            ))}
+            <Textarea
+              placeholder="Genres (comma separated)"
               value={formData.genres}
-              onChange={handleChange}
-              placeholder="Enter creator's genres (comma separated)"
-              borderColor="gray.300"
+              onChange={(e) =>
+                setFormData({ ...formData, genres: e.target.value })
+              }
             />
-          </FormControl>
-
-          <FormControl id="collaborations">
-            <FormLabel>Collaborations</FormLabel>
-            <Input
-              type="text"
-              name="collaborations"
-              value={formData.collaborations}
-              onChange={handleChange}
-              placeholder="Enter collaborations (with link to post and comma separated)"
-              borderColor="gray.300"
-            />
-          </FormControl>
-
-          <FormControl id="ratings" isRequired>
-            <FormLabel>Ratings</FormLabel>
-            <Input
-              type="number"
-              name="ratings"
-              value={formData.ratings}
-              onChange={handleChange}
-              placeholder="Creator's rating (1-5)"
-              borderColor="gray.300"
-            />
-          </FormControl>
-
-          <HStack justify="center" spacing="4" mt="6">
+            <Text fontWeight="semibold">Collaborations</Text>
+            {formData.collaborations.map((collab, index) => (
+              <Flex key={index} gap="2">
+                <Input
+                  placeholder="Brand Name"
+                  value={collab.brand}
+                  onChange={(e) =>
+                    handleCollaborationChange(index, "brand", e.target.value)
+                  }
+                />
+                <Input
+                  placeholder="Brand URL"
+                  value={collab.url}
+                  onChange={(e) =>
+                    handleCollaborationChange(index, "url", e.target.value)
+                  }
+                />
+              </Flex>
+            ))}
             <Button
               bg="black"
               color="white"
-              _hover={{
-                bg: "gray.800",
-              }}
-              onClick={handleSubmit}
+              _hover={{ opacity: 0.7 }}
+              onClick={addCollaboration}
             >
+              Add Collaboration
+            </Button>
+            <Input
+              placeholder="Ratings (1-5)"
+              type="number"
+              step="0.1"
+              max="5"
+              min="0"
+              value={formData.ratings}
+              onChange={(e) =>
+                setFormData({ ...formData, ratings: e.target.value })
+              }
+            />
+            <Button colorScheme="blue" onClick={handleSubmit}>
               Submit Creator
             </Button>
-            <Button
-              variant="outline"
-              onClick={() =>
-                setFormData({
-                  name: "",
-                  username: "",
-                  bio: "",
-                  followers: "",
-                  platforms: [],
-                  genres: "",
-                  collaborations: "",
-                  ratings: "",
-                })
-              }
-            >
-              Reset
-            </Button>
-          </HStack>
-        </VStack>
+          </VStack>
+        </Box>
       </Box>
     </>
   );
 };
-
-export default SubmitACreator;

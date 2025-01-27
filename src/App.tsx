@@ -6,7 +6,7 @@ import { SignIn } from "./SignIn";
 import { SpecificCreator } from "./SpecificCreator";
 import { Home } from "./Home";
 import { Biography } from "./Biography";
-import SubmitACreator from "./SubmitACreator";
+import { SubmitACreator } from "./SubmitACreator";
 import { Subscribe } from "./Subscribe";
 import { Profile } from "./Profile";
 

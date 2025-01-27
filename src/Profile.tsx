@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Button, Divider, Box, useToast } from "@chakra-ui/react";
+import {
+  Flex,
+  Text,
+  Button,
+  Divider,
+  Box,
+  useToast,
+  Image,
+} from "@chakra-ui/react";
 import { auth } from "../firebase"; // Firebase auth import
 import { signOut, deleteUser, onAuthStateChanged } from "firebase/auth"; // Firebase auth methods
 import { useNavigate } from "react-router-dom";
@@ -20,20 +28,6 @@ export const Profile = () => {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Track user authentication state
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // Handle sign-out
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -54,7 +48,6 @@ export const Profile = () => {
     }
   };
 
-  // Handle account deletion
   const handleDeleteAccount = async () => {
     try {
       if (user) {
@@ -77,7 +70,8 @@ export const Profile = () => {
     }
   };
 
-  // Render profile section if user is logged in
+  console.log("user", user);
+
   if (user) {
     return (
       <Flex
@@ -100,7 +94,19 @@ export const Profile = () => {
           <Text fontSize="2xl" fontWeight="bold" textAlign="center">
             Profile
           </Text>
-          <Box>
+
+          {/* Display Profile Picture */}
+          {user.photoURL && (
+            <Image
+              src={user.photoURL}
+              alt="Profile Picture"
+              borderRadius="full"
+              boxSize="100px"
+              mx="auto"
+            />
+          )}
+
+          <Box mt="4">
             <Text fontSize="md">
               <strong>Name:</strong> {user.displayName || "N/A"}
             </Text>
@@ -110,15 +116,26 @@ export const Profile = () => {
             <Text fontSize="md">
               <strong>Email:</strong> {user.email}
             </Text>
+            {/* Add Join Date */}
+            {user.metadata?.creationTime && (
+              <Text fontSize="md">
+                <strong>Joined:</strong>{" "}
+                {new Date(user.metadata.creationTime).toLocaleDateString()}
+              </Text>
+            )}
           </Box>
 
-          <Divider mt="4" />
+          <Divider my="4" />
 
-          <Button colorScheme="red" onClick={handleSignOut}>
+          {/* <Button colorScheme="blue" onClick={() => navigate("/edit-profile")}>
+            Edit Profile
+          </Button> */}
+
+          <Button colorScheme="blue" variant="outline" onClick={handleSignOut}>
             Log Out
           </Button>
 
-          <Button colorScheme="gray" onClick={handleDeleteAccount}>
+          <Button colorScheme="red" onClick={handleDeleteAccount}>
             Delete Account
           </Button>
         </Flex>
@@ -126,7 +143,7 @@ export const Profile = () => {
     );
   }
 
-  // If no user is signed in, redirect to sign-in
+  // // If no user is signed in, redirect to sign-in
   navigate("/sign-in");
 
   return null;
