@@ -98,7 +98,7 @@ export const Subscribe = () => {
           <FormLabel mb="0" fontWeight="bold" fontSize="lg" color="#69C9D0">
             Annual {isMobile && <br />}
             <Text as="span" color="gray.500">
-              (Save $90)
+              (Save $78)
             </Text>
           </FormLabel>
         </FormControl>
@@ -216,25 +216,32 @@ export const Subscribe = () => {
             <Divider my="4" />
             <VStack>
               <Text fontSize="lg" fontWeight="bold" textAlign="center">
-                {isAnnual ? "$150/year" : "$20/month"}
+                {isAnnual ? "$150/year" : "$19/month"}
               </Text>
               {isAnnual && (
                 <Text fontSize="sm" color="gray.200" fontWeight="medium">
-                  Save $90 compared to the monthly plan
+                  Save $78 compared to the monthly plan
                 </Text>
               )}
               <Center mt="4">
-                {/* <Link to="" target="_blank"> */}
-                <Button
-                  bg="white"
-                  color="#69C9D0"
-                  _hover={{ bg: "#f0f0f0" }}
-                  size="lg"
-                  fontWeight="bold"
+                <Link
+                  to={
+                    isAnnual
+                      ? `https://buy.stripe.com/6oE9Ea4FicVmdmEdQR`
+                      : `https://buy.stripe.com/28o8A65Jmf3ubew8ww`
+                  }
+                  target="_blank"
                 >
-                  Subscribe to Pro
-                </Button>
-                {/* </Link> */}
+                  <Button
+                    bg="white"
+                    color="#69C9D0"
+                    _hover={{ bg: "#f0f0f0" }}
+                    size="lg"
+                    fontWeight="bold"
+                  >
+                    Subscribe to Pro
+                  </Button>
+                </Link>
               </Center>
             </VStack>
           </Box>

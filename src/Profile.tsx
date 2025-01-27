@@ -1,46 +1,75 @@
-import { useState, useEffect } from "react";
 import {
   Flex,
-  Text,
-  Button,
-  Divider,
   Box,
+  Text,
+  Avatar,
+  Button,
   useToast,
-  Image,
+  Spinner,
 } from "@chakra-ui/react";
-import { auth } from "../firebase"; // Firebase auth import
-import { signOut, deleteUser, onAuthStateChanged } from "firebase/auth"; // Firebase auth methods
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  deleteUser,
+} from "firebase/auth";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export const Profile = () => {
-  const [user, setUser] = useState<any>(null); // Store authenticated user's details
-  const toast = useToast();
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true); // Add loading state
   const navigate = useNavigate();
+  const toast = useToast();
+  const auth = getAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (!currentUser) {
-        navigate("/sign-in"); // Redirect to sign-in if no user is logged in
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const profileDoc = doc(db, "profiles", user.uid);
+          const profileSnap = await getDoc(profileDoc);
+          if (profileSnap.exists()) {
+            setProfile(profileSnap.data());
+          } else {
+            toast({
+              title: "Profile not found. Redirecting to edit profile.",
+              status: "info",
+              isClosable: true,
+            });
+            navigate("/edit-profile");
+          }
+        } catch (error: any) {
+          toast({
+            title: "Error fetching profile.",
+            description: error.message,
+            status: "error",
+            isClosable: true,
+          });
+        }
       } else {
-        setUser(currentUser);
+        navigate("/sign-in"); // Redirect if no authenticated user
       }
+      setLoading(false); // Set loading to false once auth state is resolved
     });
-    return () => unsubscribe();
-  }, [navigate]);
 
-  const handleSignOut = async () => {
+    return () => unsubscribe(); // Cleanup listener on unmount
+  }, [auth, navigate, toast]);
+
+  const handleLogout = async () => {
     try {
       await signOut(auth);
-      setUser(null);
       toast({
-        title: "Logged out successfully!",
+        title: "Logged out successfully.",
         status: "success",
         isClosable: true,
       });
-      navigate("/sign-in"); // Redirect to sign-in after logging out
+      navigate("/sign-in"); // Redirect to sign-in page
     } catch (error: any) {
       toast({
-        title: "Error logging out",
+        title: "Error logging out.",
         description: error.message,
         status: "error",
         isClosable: true,
@@ -48,103 +77,118 @@ export const Profile = () => {
     }
   };
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteProfile = async () => {
+    if (!auth.currentUser) return;
+
+    if (
+      !window.confirm(
+        "Are you sure you want to delete your profile? This action cannot be undone."
+      )
+    ) {
+      return;
+    }
+
     try {
-      if (user) {
-        await deleteUser(user);
-        setUser(null);
-        toast({
-          title: "Account deleted successfully!",
-          status: "success",
-          isClosable: true,
-        });
-        navigate("/sign-in"); // Redirect to sign-in after account deletion
-      }
+      // Delete the profile document from Firestore
+      await deleteDoc(doc(db, "profiles", auth.currentUser.uid));
+
+      // Delete the user's account from Firebase Auth
+      await deleteUser(auth.currentUser);
+
+      toast({
+        title: "Profile deleted successfully.",
+        status: "success",
+        isClosable: true,
+      });
+
+      navigate("/sign-in"); // Redirect to sign-in page
     } catch (error: any) {
       toast({
-        title: "Error deleting account",
-        description: error.message,
+        title: "Error deleting profile.",
+        description:
+          error.code === "auth/requires-recent-login"
+            ? "Please log in again before deleting your profile."
+            : error.message,
         status: "error",
         isClosable: true,
       });
     }
   };
 
-  console.log("user", user);
-
-  if (user) {
+  if (loading) {
+    // Show a loading spinner while waiting for auth state and profile data
     return (
-      <Flex
-        p="4"
-        mt="10"
-        flexDir="column"
-        width="100%"
-        align="center"
-        justify="center"
-      >
-        <Flex
-          flexDir="column"
-          width={{ base: "90%", sm: "70%", md: "40%", lg: "30%" }}
-          gap="4"
-          bg="white"
-          p="8"
-          borderRadius="md"
-          boxShadow="xl"
-        >
-          <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-            Profile
-          </Text>
-
-          {/* Display Profile Picture */}
-          {user.photoURL && (
-            <Image
-              src={user.photoURL}
-              alt="Profile Picture"
-              borderRadius="full"
-              boxSize="100px"
-              mx="auto"
-            />
-          )}
-
-          <Box mt="4">
-            <Text fontSize="md">
-              <strong>Name:</strong> {user.displayName || "N/A"}
-            </Text>
-            <Text fontSize="md">
-              <strong>Username:</strong> {user.email.split("@")[0]}
-            </Text>
-            <Text fontSize="md">
-              <strong>Email:</strong> {user.email}
-            </Text>
-            {/* Add Join Date */}
-            {user.metadata?.creationTime && (
-              <Text fontSize="md">
-                <strong>Joined:</strong>{" "}
-                {new Date(user.metadata.creationTime).toLocaleDateString()}
-              </Text>
-            )}
-          </Box>
-
-          <Divider my="4" />
-
-          {/* <Button colorScheme="blue" onClick={() => navigate("/edit-profile")}>
-            Edit Profile
-          </Button> */}
-
-          <Button colorScheme="blue" variant="outline" onClick={handleSignOut}>
-            Log Out
-          </Button>
-
-          <Button colorScheme="red" onClick={handleDeleteAccount}>
-            Delete Account
-          </Button>
-        </Flex>
+      <Flex align="center" justify="center" minHeight="100vh" bg="gray.100">
+        <Spinner size="xl" />
       </Flex>
     );
   }
 
-  // // If no user is signed in, redirect to sign-in
-  navigate("/sign-in");
+  if (!profile) {
+    return null; // Avoid rendering if no profile is available
+  }
 
-  return null;
+  return (
+    <Flex align="center" justify="center" minHeight="100vh" bg="gray.100" p="4">
+      <Box
+        w={{ base: "90%", sm: "80%", md: "50%", lg: "40%" }}
+        bg="white"
+        p="8"
+        borderRadius="lg"
+        boxShadow="xl"
+      >
+        <Flex justify="center" mb="6">
+          <Avatar
+            size="xl"
+            src={profile.photoURL || "https://via.placeholder.com/150"}
+            name={profile.name || "Your Name"}
+          />
+        </Flex>
+
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb="2">
+          {profile.name || "Your Name"}
+        </Text>
+
+        <Text fontSize="md" color="gray.600" textAlign="center" mb="2">
+          @{profile.username || "username"}
+        </Text>
+
+        <Text
+          fontSize="md"
+          textAlign="center"
+          color="gray.600"
+          mb="2"
+          whiteSpace="pre-wrap"
+        >
+          {profile.bio || "No bio available"}
+        </Text>
+
+        <Text fontSize="sm" textAlign="center" color="gray.500" mb="6">
+          Email: {profile.email}
+        </Text>
+
+        <Button
+          colorScheme="blue"
+          width="100%"
+          mb="4"
+          onClick={() => navigate("/edit-profile")}
+        >
+          Edit Profile
+        </Button>
+
+        <Button colorScheme="red" width="100%" mb="4" onClick={handleLogout}>
+          Log Out
+        </Button>
+
+        <Button
+          colorScheme="red"
+          width="100%"
+          variant="outline"
+          onClick={handleDeleteProfile}
+        >
+          Delete Profile
+        </Button>
+      </Box>
+    </Flex>
+  );
 };

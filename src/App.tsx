@@ -9,6 +9,7 @@ import { Biography } from "./Biography";
 import { SubmitACreator } from "./SubmitACreator";
 import { Subscribe } from "./Subscribe";
 import { Profile } from "./Profile";
+import { EditProfile } from "./EditProfile";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         {/* restrict /profile to only ppl signed in */}
         <Route path="/profile" element={<Profile />} />
         <Route path="/subscribe" element={<Subscribe />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/creator/:id" element={<SpecificCreator />} />
         <Route path="/submit-a-creator" element={<SubmitACreator />} />
         <Route path="/creator/:id/biography" element={<Biography />} />
