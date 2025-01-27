@@ -24,6 +24,7 @@ export const Subscribe = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAnnual, setIsAnnual] = useState(false); // State for the slider
   const auth = getAuth();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -95,7 +96,7 @@ export const Subscribe = () => {
             />
           </Box>
           <FormLabel mb="0" fontWeight="bold" fontSize="lg" color="#69C9D0">
-            Annual{" "}
+            Annual {isMobile && <br />}
             <Text as="span" color="gray.500">
               (Save $90)
             </Text>
