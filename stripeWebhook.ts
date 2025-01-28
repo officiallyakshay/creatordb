@@ -24,6 +24,7 @@ export const stripeWebhook = https.onRequest(async (req: any, res: any) => {
       endpointSecret
     );
   } catch (err) {
+    // @ts-ignore
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
@@ -32,6 +33,7 @@ export const stripeWebhook = https.onRequest(async (req: any, res: any) => {
     const session = event.data.object;
 
     // Get user UID from session metadata (assuming you passed it)
+    // @ts-ignore
     const userId = session.metadata.user;
 
     if (userId) {
