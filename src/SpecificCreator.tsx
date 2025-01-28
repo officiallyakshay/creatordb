@@ -45,7 +45,7 @@ export const SpecificCreator = () => {
               <Image
                 src={creator.profileImage}
                 height="200px"
-                width="200px"
+                width={isMobile ? "200px" : "250px"}
                 objectFit="cover"
                 borderRadius="full"
                 boxShadow="lg"
@@ -54,12 +54,22 @@ export const SpecificCreator = () => {
                 flexDir="column"
                 gap="3"
                 textAlign={{ base: "center", md: "left" }}
+                width="100%"
               >
-                <Flex justify="space-between">
+                <Flex
+                  justify="space-between"
+                  flexDir={isMobile ? "column" : "row"}
+                >
                   <Heading size="lg" fontWeight="bold" color="black">
                     {creator.name}
                   </Heading>
-                  <Button bg="black" color="white" _hover={{ opacity: 0.7 }}>
+                  <Button
+                    bg="black"
+                    color="white"
+                    _hover={{ opacity: 0.7 }}
+                    mt={isMobile ? "3" : "0"}
+                    // onClick={() => }
+                  >
                     Claim Page
                   </Button>
                 </Flex>
@@ -77,6 +87,7 @@ export const SpecificCreator = () => {
                     </Text>
                   ))}
                 </Flex>
+                {/* this should be creator.header. like a 50 word excerpt */}
                 <Text color="gray.700">{creator.bio}</Text>
                 <Flex
                   gap="4"
@@ -97,6 +108,7 @@ export const SpecificCreator = () => {
                     }}
                     onClick={() => navigate(`/creator/${id}/biography`)}
                     mt="2"
+                    width={isMobile ? "100%" : "auto"}
                   >
                     Read More
                     <MdKeyboardArrowRight size="20" />

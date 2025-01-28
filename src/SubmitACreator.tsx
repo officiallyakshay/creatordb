@@ -93,6 +93,13 @@ export const SubmitACreator = () => {
     });
   };
 
+  const handleCollaborationDelete = (index: number) => {
+    const updatedCollaborations = formData.collaborations.filter(
+      (_, i) => i !== index
+    );
+    setFormData({ ...formData, collaborations: updatedCollaborations });
+  };
+
   // const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const file = e.target.files?.[0];
   //   if (!file) return;
@@ -163,6 +170,7 @@ export const SubmitACreator = () => {
         submittedBy: email,
       };
 
+      // if user isPro, send to "creators" collection
       await addDoc(collection(db, "pending-creators"), submissionData);
 
       toast({
@@ -336,6 +344,13 @@ export const SubmitACreator = () => {
                     handleCollaborationChange(index, "url", e.target.value)
                   }
                 />
+                <Button
+                  colorScheme="red"
+                  variant="outline"
+                  onClick={() => handleCollaborationDelete(index)}
+                >
+                  X
+                </Button>
               </Flex>
             ))}
             <Button

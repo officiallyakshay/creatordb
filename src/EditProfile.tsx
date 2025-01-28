@@ -71,6 +71,7 @@ export const EditProfile = () => {
 
     return () => unsubscribe(); // Cleanup listener on unmount
   }, [auth, navigate, toast]);
+
   useEffect(() => {
     if (user) {
       setEmail(user.email || "");
@@ -175,7 +176,7 @@ export const EditProfile = () => {
   }
 
   return (
-    <Flex align="center" justify="center" minHeight="100vh" bg="gray.100" p="4">
+    <Flex align="center" justify="center" p="4">
       <Box
         w={{ base: "90%", sm: "80%", md: "50%", lg: "40%" }}
         bg="white"

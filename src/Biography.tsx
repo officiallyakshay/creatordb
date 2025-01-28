@@ -14,14 +14,14 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { mockData } from "./mockData";
 import { formatNumber } from "./utils/formatNumber";
 import { SocialMediaIcons } from "./utils/socialMediaIcons";
 import { VerticalLineWithText } from "./utils/indentedTitle";
 import { LuExternalLink } from "react-icons/lu";
 import { FaRegEdit } from "react-icons/fa";
-import { MdKeyboardArrowRight } from "react-icons/md";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { db } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { useState } from "react";
@@ -38,6 +38,7 @@ export const Biography = () => {
   const auth = getAuth();
   const user = auth.currentUser;
   const creator = mockData.find((creator) => creator.username === id);
+  const navigate = useNavigate();
 
   if (!creator) return null;
 
@@ -69,17 +70,24 @@ export const Biography = () => {
         boxShadow="lg"
         width={{ base: "95%", md: "80%" }}
       >
-        {/* Header Section */}
-        <Heading size="lg" fontWeight="bold" color="black" mb="4">
+        <Heading
+          size="lg"
+          fontWeight="bold"
+          color="black"
+          mb="4"
+          textAlign={isMobile ? "center" : "left"}
+          mt="2"
+        >
           Biography
         </Heading>
-        <Text fontSize="xs" color="gray.400" mb="4">
+        {/* <Text fontSize="xs" color="gray.400" mb="4">
           Information ethically scraped from Wikipedia.
-        </Text>
+        </Text> */}
         <Flex
           flexDir={{ base: "column", md: "row" }}
           align={{ base: "center", md: "flex-start" }}
           gap="6"
+          mt="5"
         >
           <Image
             src={creator.profileImage}

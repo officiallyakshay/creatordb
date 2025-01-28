@@ -6,6 +6,7 @@ import {
   Button,
   useToast,
   Spinner,
+  Badge,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +21,7 @@ import { db } from "../firebase";
 
 export const Profile = () => {
   const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const toast = useToast();
   const auth = getAuth();
@@ -50,12 +51,12 @@ export const Profile = () => {
           });
         }
       } else {
-        navigate("/sign-in"); // Redirect if no authenticated user
+        navigate("/sign-in");
       }
-      setLoading(false); // Set loading to false once auth state is resolved
+      setLoading(false);
     });
 
-    return () => unsubscribe(); // Cleanup listener on unmount
+    return () => unsubscribe();
   }, [auth, navigate, toast]);
 
   const handleLogout = async () => {
@@ -66,7 +67,7 @@ export const Profile = () => {
         status: "success",
         isClosable: true,
       });
-      navigate("/sign-in"); // Redirect to sign-in page
+      navigate("/sign-in");
     } catch (error: any) {
       toast({
         title: "Error logging out.",
@@ -89,10 +90,7 @@ export const Profile = () => {
     }
 
     try {
-      // Delete the profile document from Firestore
       await deleteDoc(doc(db, "profiles", auth.currentUser.uid));
-
-      // Delete the user's account from Firebase Auth
       await deleteUser(auth.currentUser);
 
       toast({
@@ -101,7 +99,7 @@ export const Profile = () => {
         isClosable: true,
       });
 
-      navigate("/sign-in"); // Redirect to sign-in page
+      navigate("/sign-in");
     } catch (error: any) {
       toast({
         title: "Error deleting profile.",
@@ -116,50 +114,52 @@ export const Profile = () => {
   };
 
   if (loading) {
-    // Show a loading spinner while waiting for auth state and profile data
     return (
-      <Flex align="center" justify="center" minHeight="100vh" bg="gray.100">
+      <Flex align="center" justify="center" minHeight="100vh">
         <Spinner size="xl" />
       </Flex>
     );
   }
 
   if (!profile) {
-    return null; // Avoid rendering if no profile is available
+    return null;
   }
 
   return (
-    <Flex align="center" justify="center" minHeight="100vh" bg="gray.100" p="4">
+    <Flex align="center" justify="center" p="4">
       <Box
         w={{ base: "90%", sm: "80%", md: "50%", lg: "40%" }}
         bg="white"
         p="8"
         borderRadius="lg"
-        boxShadow="xl"
+        boxShadow="lg"
+        maxW="xl"
+        mx="auto"
+        mt="4"
+        borderWidth="1px"
       >
         <Flex justify="center" mb="6">
-          <Avatar
-            size="xl"
-            // src={profile.photoURL || "https://via.placeholder.com/150"}
-            name={profile.name || "Your Name"}
-          />
+          <Avatar size="xl" name={profile.name || "Your Name"} />
         </Flex>
-
         <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb="2">
-          {profile.name || "Your Name"}
+          <Flex justify="center" align="center">
+            {profile.name || "Your Name"}{" "}
+            <Badge
+              ml="2"
+              colorScheme={profile.isPro ? "teal" : "gray"}
+              fontSize="0.8em"
+              borderRadius="md"
+              px="2"
+            >
+              {profile.isPro ? "Pro" : "Basic"}
+            </Badge>
+          </Flex>
         </Text>
-
         <Text fontSize="md" color="gray.600" textAlign="center" mb="2">
           @{profile.username || "username"}
         </Text>
 
-        <Text
-          fontSize="md"
-          textAlign="center"
-          color="gray.600"
-          mb="2"
-          whiteSpace="pre-wrap"
-        >
+        <Text fontSize="md" textAlign="center" color="gray.600" mb="2">
           {profile.bio || "No bio available"}
         </Text>
 

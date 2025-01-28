@@ -24,6 +24,7 @@ export const Subscribe = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAnnual, setIsAnnual] = useState(false); // State for the slider
   const auth = getAuth();
+  const user = auth.currentUser;
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
@@ -46,6 +47,10 @@ export const Subscribe = () => {
 
     return () => unsubscribe();
   }, [auth, toast, navigate]);
+
+  const stripeUrl = isAnnual
+    ? `https://buy.stripe.com/6oE9Ea4FicVmdmEdQR?user=${user?.uid}`
+    : `https://buy.stripe.com/28o8A65Jmf3ubew8ww?user=${user?.uid}`;
 
   return (
     <Box maxW="4xl" mx="auto" p="6">
@@ -224,14 +229,7 @@ export const Subscribe = () => {
                 </Text>
               )}
               <Center mt="4">
-                <Link
-                  to={
-                    isAnnual
-                      ? `https://buy.stripe.com/6oE9Ea4FicVmdmEdQR`
-                      : `https://buy.stripe.com/28o8A65Jmf3ubew8ww`
-                  }
-                  target="_blank"
-                >
+                <Link to={stripeUrl} target="_blank">
                   <Button
                     bg="white"
                     color="#69C9D0"
