@@ -70,16 +70,29 @@ export const Biography = () => {
         boxShadow="lg"
         width={{ base: "95%", md: "80%" }}
       >
-        <Heading
-          size="lg"
-          fontWeight="bold"
-          color="black"
-          mb="4"
-          textAlign={isMobile ? "center" : "left"}
-          mt="2"
+        <Flex
+          justify="space-between"
+          flexDir={isMobile ? "column" : "row"}
+          gap="4"
         >
-          Biography
-        </Heading>
+          <Heading
+            size="lg"
+            fontWeight="bold"
+            color="black"
+            textAlign={isMobile ? "center" : "left"}
+          >
+            Biography
+          </Heading>
+          <Button
+            bg="#69C9D0"
+            color="white"
+            _hover={{ opacity: 0.7 }}
+            // onClick={() => }
+          >
+            <Text mr="2">Edit Page</Text>
+            <FaRegEdit size="20" />
+          </Button>
+        </Flex>
         {/* <Text fontSize="xs" color="gray.400" mb="4">
           Information ethically scraped from Wikipedia.
         </Text> */}
@@ -87,7 +100,7 @@ export const Biography = () => {
           flexDir={{ base: "column", md: "row" }}
           align={{ base: "center", md: "flex-start" }}
           gap="6"
-          mt="5"
+          mt="7"
         >
           <Image
             src={creator.profileImage}

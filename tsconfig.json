@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "stripeWebhook.ts"],
+  "include": ["src", "stripeWebhook.ts", "firebase.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

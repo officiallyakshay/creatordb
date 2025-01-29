@@ -141,20 +141,20 @@ export const Profile = () => {
         <Flex justify="center" mb="6">
           <Avatar size="xl" name={profile.name || "Your Name"} />
         </Flex>
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb="2">
-          <Flex justify="center" align="center">
+        <Flex justify="center" align="center" mb="2">
+          <Text fontSize="2xl" fontWeight="bold" textAlign="center">
             {profile.name || "Your Name"}{" "}
-            <Badge
-              ml="2"
-              colorScheme={profile.isPro ? "teal" : "gray"}
-              fontSize="0.8em"
-              borderRadius="md"
-              px="2"
-            >
-              {profile.isPro ? "Pro" : "Basic"}
-            </Badge>
-          </Flex>
-        </Text>
+          </Text>
+          <Badge
+            ml="2"
+            colorScheme={profile.isPro ? "teal" : "gray"}
+            fontSize="0.8em"
+            borderRadius="md"
+            px="2"
+          >
+            {profile.isPro ? "Pro" : "Basic"}
+          </Badge>
+        </Flex>
         <Text fontSize="md" color="gray.600" textAlign="center" mb="2">
           @{profile.username || "username"}
         </Text>

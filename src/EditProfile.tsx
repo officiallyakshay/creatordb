@@ -10,6 +10,7 @@ import {
   Avatar,
   useToast,
   Spinner,
+  Badge,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -139,13 +140,17 @@ export const EditProfile = () => {
 
     try {
       const profileDoc = doc(db, "profiles", user.uid);
-      await setDoc(profileDoc, {
-        name: name.trim(),
-        username: username.trim(),
-        bio: bio.trim(),
-        // photoURL: photoURL.trim(),
-        email,
-      });
+      await setDoc(
+        profileDoc,
+        {
+          name: name.trim(),
+          username: username.trim(),
+          bio: bio.trim(),
+          // photoURL: photoURL.trim(),
+          email,
+        },
+        { merge: true }
+      );
       toast({
         title: "Profile updated successfully!",
         status: "success",
@@ -188,12 +193,20 @@ export const EditProfile = () => {
           Edit Profile
         </Text>
 
-        <Flex justify="center" mb="6">
+        <Flex justify="center" mb="6" align="center" flexDir="column">
           <Avatar
             size="xl"
             // src={photoURL || "https://via.placeholder.com/150"}
             name={name || "Your Name"}
           />
+          <Badge
+            colorScheme={profile.isPro ? "teal" : "gray"}
+            fontSize="0.8em"
+            borderRadius="md"
+            mt="5"
+          >
+            Plan: {profile.isPro ? "Pro" : "Basic"}
+          </Badge>
         </Flex>
 
         <FormControl mb="4">

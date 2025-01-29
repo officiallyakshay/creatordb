@@ -10,20 +10,20 @@ import {
   VStack,
   useToast,
   useBreakpointValue,
+  Spinner,
+  FormControl,
 } from "@chakra-ui/react";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage } from "firebase/storage";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc } from "@firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 export const SubmitACreator = () => {
   const toast = useToast();
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [formData, setFormData] = useState({
@@ -39,16 +39,46 @@ export const SubmitACreator = () => {
       { name: "TikTok", handle: "", url: "" },
       { name: "Twitch", handle: "", url: "" },
     ],
-    genres: "",
+    genres: [] as string[],
     collaborations: [{ brand: "", url: "" }],
     ratings: "",
   });
   // const [photoURL, setPhotoURL] = useState("");
-  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
-  const storage = getStorage();
-  const user = auth.currentUser;
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const profileDoc = doc(db, "profiles", user.uid);
+          const profileSnap = await getDoc(profileDoc);
+          if (profileSnap.exists()) {
+            setProfile(profileSnap.data());
+          } else {
+            toast({
+              title: "Profile not found. Redirecting to edit profile.",
+              status: "info",
+              isClosable: true,
+            });
+            navigate("/edit-profile");
+          }
+        } catch (error: any) {
+          toast({
+            title: "Error fetching profile.",
+            description: error.message,
+            status: "error",
+            isClosable: true,
+          });
+        }
+      } else {
+        navigate("/sign-in");
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [auth, navigate, toast]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -78,6 +108,11 @@ export const SubmitACreator = () => {
     setFormData({ ...formData, platforms: updatedPlatforms });
   };
 
+  const handlePlatformDelete = (index: number) => {
+    const updatedPlatforms = formData.platforms.filter((_, i) => i !== index);
+    setFormData({ ...formData, platforms: updatedPlatforms });
+  };
+
   // @ts-ignore
   const handleCollaborationChange = (index, field, value) => {
     const updatedCollaborations = [...formData.collaborations];
@@ -99,6 +134,8 @@ export const SubmitACreator = () => {
     );
     setFormData({ ...formData, collaborations: updatedCollaborations });
   };
+
+  const isGenresEmpty = formData.genres.every((genre) => genre.trim() === "");
 
   // const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const file = e.target.files?.[0];
@@ -148,7 +185,7 @@ export const SubmitACreator = () => {
       !bio.trim() ||
       !followers.trim() ||
       !hasPlatformFilled ||
-      !genres.trim() ||
+      isGenresEmpty ||
       !ratings.trim()
     ) {
       toast({
@@ -171,12 +208,17 @@ export const SubmitACreator = () => {
       };
 
       // if user isPro, send to "creators" collection
-      await addDoc(collection(db, "pending-creators"), submissionData);
+      // await addDoc(
+      //   collection(db, profile.isPro ? "creators" : "pending-creators"),
+      //   submissionData
+      // );
+      await addDoc(collection(db, "creators"), submissionData);
 
       toast({
         title: "Creator Submitted!",
-        description:
-          "Your submission has been sent and will be reviewed shortly.",
+        description: profile.isPro
+          ? "Your submission has been added to our platform. Thanks!"
+          : "Your submission has been sent and will be reviewed shortly.",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -196,7 +238,7 @@ export const SubmitACreator = () => {
           { name: "TikTok", handle: "", url: "" },
           { name: "Twitch", handle: "", url: "" },
         ],
-        genres: "",
+        genres: [],
         collaborations: [{ brand: "", url: "" }],
         ratings: "",
       });
@@ -211,6 +253,14 @@ export const SubmitACreator = () => {
       });
     }
   };
+
+  if (loading) {
+    return (
+      <Flex align="center" justify="center" minHeight="100vh">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
 
   return (
     <>
@@ -291,9 +341,15 @@ export const SubmitACreator = () => {
             />
             <Text fontWeight="semibold">Social Platforms</Text>
             {formData.platforms.map((platform, index) => (
-              <Flex key={index} gap="2" flexDir={isMobile ? "column" : "row"}>
+              <Flex
+                key={index}
+                gap="2"
+                alignItems="center"
+                flexDir={isMobile ? "column" : "row"}
+              >
                 <Select
                   value={platform.name}
+                  placeholder="Platform"
                   onChange={(e) =>
                     handlePlatformChange(index, "name", e.target.value)
                   }
@@ -318,15 +374,48 @@ export const SubmitACreator = () => {
                     handlePlatformChange(index, "url", e.target.value)
                   }
                 />
+                {formData.platforms.length > 1 && (
+                  <Button
+                    colorScheme="red"
+                    variant="outline"
+                    onClick={() => handlePlatformDelete(index)}
+                  >
+                    X
+                  </Button>
+                )}
               </Flex>
             ))}
+
+            <Button
+              bg="black"
+              color="white"
+              _hover={{ opacity: 0.8 }}
+              onClick={() =>
+                setFormData({
+                  ...formData,
+                  platforms: [
+                    ...formData.platforms,
+                    { name: "", handle: "", url: "" },
+                  ],
+                })
+              }
+            >
+              Add Platform
+            </Button>
+
             <Textarea
               placeholder="Genres (comma separated)"
-              value={formData.genres}
+              value={formData.genres.join(", ")} // Join array into a string for display
               onChange={(e) =>
-                setFormData({ ...formData, genres: e.target.value })
+                setFormData({
+                  ...formData,
+                  genres: e.target.value
+                    .split(",")
+                    .map((genre) => genre.trim()),
+                })
               }
             />
+
             <Text fontWeight="semibold">Collaborations</Text>
             {formData.collaborations.map((collab, index) => (
               <Flex key={index} gap="2">
@@ -344,13 +433,15 @@ export const SubmitACreator = () => {
                     handleCollaborationChange(index, "url", e.target.value)
                   }
                 />
-                <Button
-                  colorScheme="red"
-                  variant="outline"
-                  onClick={() => handleCollaborationDelete(index)}
-                >
-                  X
-                </Button>
+                {formData.collaborations.length > 1 && (
+                  <Button
+                    colorScheme="red"
+                    variant="outline"
+                    onClick={() => handleCollaborationDelete(index)}
+                  >
+                    X
+                  </Button>
+                )}
               </Flex>
             ))}
             <Button

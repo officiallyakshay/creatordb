@@ -1,15 +1,36 @@
+import React, { useEffect, useState } from "react";
 import { Flex, Image, Text, Select, Box } from "@chakra-ui/react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { mockData } from "./mockData";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 import { formatNumber } from "./utils/formatNumber";
 
 export const TopCreators = () => {
-  const [creators, setCreators] = useState(mockData);
+  const [creators, setCreators] = useState<any[]>([]);
+  const [filteredCreators, setFilteredCreators] = useState<any[]>([]);
   const [sortOption, setSortOption] = useState("default");
   const navigate = useNavigate();
 
-  // Sorting function based on selected option
+  // Fetch creators from Firebase
+  useEffect(() => {
+    const fetchCreators = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "creators"));
+        const creatorsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCreators(creatorsData);
+        setFilteredCreators(creatorsData); // Default filtered list
+      } catch (error) {
+        console.error("Error fetching creators:", error);
+      }
+    };
+
+    fetchCreators();
+  }, []);
+
+  // Sorting function
   const sortCreators = (option: string) => {
     let sortedCreators = [...creators];
 
@@ -23,10 +44,10 @@ export const TopCreators = () => {
       sortedCreators.sort((a, b) => a.ratings - b.ratings);
     }
 
-    setCreators(sortedCreators);
+    setFilteredCreators(sortedCreators);
   };
 
-  // Handle change of sort option
+  // Handle sort option change
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSortOption(value);
@@ -55,8 +76,7 @@ export const TopCreators = () => {
             As determined by CreatorDB Users
           </Text>
           <Text mt="2" fontSize="sm" color="gray.500">
-            {/* #69C9D0 */}
-            {creators.length} Creators
+            {filteredCreators.length} Creators
           </Text>
         </Box>
 
@@ -84,9 +104,9 @@ export const TopCreators = () => {
         width={{ base: "90%", md: "80%" }}
         align="center"
       >
-        {creators.map((creator: any, i: number) => (
+        {filteredCreators.map((creator, i) => (
           <Flex
-            key={i}
+            key={creator.id}
             flexDir={{ base: "column", md: "row" }}
             border="1px solid black"
             padding="6"
