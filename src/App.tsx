@@ -24,9 +24,9 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/subscribe" element={<Subscribe />} />
         <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/creator/:id" element={<SpecificCreator />} />
+        <Route path="/creator/:id" element={<Biography />} />
         <Route path="/submit-a-creator" element={<SubmitACreator />} />
-        <Route path="/creator/:id/biography" element={<Biography />} />
+        {/* <Route path="/creator/:id/biography" element={<Biography />} /> */}
       </Routes>
     </>
   );

@@ -153,7 +153,7 @@ export const Subscribe = () => {
               </HStack>
               <HStack>
                 <Text>❌</Text>
-                <Text>Edit any existing post</Text>
+                <Text>Edit any existing post that has not been claimed.</Text>
               </HStack>
             </VStack>
             <Divider my="4" />
@@ -215,7 +215,7 @@ export const Subscribe = () => {
               </HStack>
               <HStack>
                 <Text>✅</Text>
-                <Text>Edit any existing post</Text>
+                <Text>Edit any existing post that has not been claimed.</Text>
               </HStack>
             </VStack>
             <Divider my="4" />
